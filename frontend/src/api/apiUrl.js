@@ -16,3 +16,5 @@ const baseUrl = getBaseUrl();
 // TODO: setup url to give only url or full url
 export const getAllItemsApiUrl = '/api/item/all';
 export const createNewItemApiUrl = '/api/item/create';
+export const deleteItemApiUrl = '/api/item/delete';
+export const updateCountApiUrl = '/api/item/updateCount';
