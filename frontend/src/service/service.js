@@ -27,9 +27,9 @@ export const updateCount = async ({ id, type, category }) => {
  * CATEGORY APIS
  */
 // TODO: check if this category API is beeing used
-// export const createNewCategory = async ({ categoryName, itemName, itemId }) => {
-//   await api.createNewCategoryApi({ categoryName, itemName, itemId });
-// }
+export const createNewCategory = async ({ categoryName, itemName, itemId }) => {
+  await api.createNewCategoryApi({ categoryName, itemName, itemId });
+}
 
 export const getAllCategoryAndItems = async () => {
   const response = await api.getAllCategoryAndItemsApi();

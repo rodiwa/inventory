@@ -103,26 +103,25 @@ export const updateCountApi = ({ id, type, category }) => {
 /**
  * CATEGORY APIS
  */
-// TODO: check if this is really working apiUrl seems incorrect
-// export const createNewCategoryApi = ({ categoryName, itemName, itemId }) => {
-//   return (async () => {
-//     try {
-//       const response = await fetch(createNewCategoryApiUrl, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ categoryName, itemName, itemId })
-//       })
-//       if (response.status !== 200) {
-//         setError(response.status);
-//       }
-//       return;
-//     } catch(error) {
-//       console.error(error)
-//     }
-//   })();
-// }
+export const createNewCategoryApi = ({ categoryName, itemName, itemId }) => {
+  return (async () => {
+    try {
+      const response = await fetch(createNewCategoryApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ categoryName, itemName, itemId })
+      })
+      if (response.status !== 200) {
+        setError(response.status);
+      }
+      return;
+    } catch(error) {
+      console.error(error)
+    }
+  })();
+}
 
 export const getAllCategoryAndItemsApi = () => {
   return (async () => {

@@ -7,10 +7,13 @@ class Inventory extends React.Component {
     super(props);
     this.state = {
       addNewItem: false,
+      addNewCategory: false,
       loading: true,
       allCategoryAndItems: {}
     }
     this.addItemInputRef = React.createRef();
+    this.addCategoryNameInputRef = React.createRef();
+    this.addCategoryFirstInputRef = React.createRef();
   }
 
   async componentDidMount() {
@@ -19,7 +22,8 @@ class Inventory extends React.Component {
 
   resetForm = () => {
     this.setState({
-      addNewItem: false
+      addNewItem: false,
+      addNewCategory: false
     })
   }
 
@@ -138,6 +142,46 @@ class Inventory extends React.Component {
     });
   }
 
+  handleAddNewCategory = () => {
+    this.setState({
+      addNewCategory: true
+    });
+  }
+
+  handleCancelAddNewCategory = () => {
+    this.setState({
+      addNewCategory: false
+    });
+  }
+  
+  handleAddNewCategorySubmit = async (e, category) => {
+    e.preventDefault();
+    const categoryName = this.addCategoryNameInputRef.current.value;
+    const itemName = this.addCategoryFirstInputRef.current.value;
+
+    if (!categoryName || !itemName) {
+      console.error('Category name and item name required to create category');
+      return;
+    }
+
+    const itemId = uuidv4();
+    await Services.createNewCategory({ categoryName, itemId, itemName });
+    this.resetForm();
+
+    // add new categoy to state to update locally
+    const newItemInCategory = [{
+      name: itemName,
+      id: itemId,
+      count: 1
+    }]
+    this.setState({
+      allCategoryAndItems: {
+        ...this.state.allCategoryAndItems,
+        [categoryName]: newItemInCategory
+      }
+    });
+  }
+
   handleAddNewItemSubmit = async (e, category) => {
     e.preventDefault();
     const name = this.addItemInputRef.current.value;
@@ -176,15 +220,16 @@ class Inventory extends React.Component {
           <div><span>No Items So Far</span></div>
         }
 
-        {/* { this.state.addNewItem &&
-          <form onSubmit={(e) => this.handleAddNewItemSubmit(e)}>
-            <div><input ref={this.addItemInputRef} type="text" placeholder="Item name" autoFocus></input></div>
-            <div><button type="submit">Add Item</button></div>
+        { this.state.addNewCategory &&
+          <form onSubmit={(e) => this.handleAddNewCategorySubmit(e)}>
+            <div><input ref={this.addCategoryNameInputRef} type="text" placeholder="Category name" autoFocus></input></div>
+            <div><input ref={this.addCategoryFirstInputRef} type="text" placeholder="First Input"></input></div>
+            <div><button type="submit">Add Category</button></div>
           </form> }
-        { this.state.addNewItem && 
-          <div><button id="btn-add-new" onClick={() =>this.handleCancelAddNewItem()}>Cancel</button></div> }
-        { !this.state.addNewItem &&  
-          <div><button id="btn-add-new" onClick={() =>this.handleAddNewItem()}>Add New</button></div> } */}
+        { this.state.addNewCategory && 
+          <div><button onClick={() =>this.handleCancelAddNewCategory()}>Cancel</button></div> }
+        { !this.state.addNewCategory &&  
+          <div><button onClick={() =>this.handleAddNewCategory()}>Add New Caegory</button></div> }
       </div>
     )
   }

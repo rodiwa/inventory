@@ -19,5 +19,5 @@ export const createNewItemApiUrl = '/api/item/create';
 export const deleteItemApiUrl = '/api/item/delete';
 export const updateCountApiUrl = '/api/item/updateCount';
 
-// export const createNewCategoryApiUrl = '/api/category/updateCount';
+export const createNewCategoryApiUrl = '/api/category/create';
 export const getAllCategoryAndItemsApiUrl = '/api/category/all';
