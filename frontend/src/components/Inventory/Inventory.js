@@ -5,32 +5,35 @@ class Inventory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addNew: false,
+      addNewItem: false,
       loading: true,
-      items: []
+      allCategoryAndItems: {}
     }
     this.addItemInputRef = React.createRef();
   }
 
   async componentDidMount() {
-    this.getAllItems();
+    this.getAllCategoryAndItems();
   }
 
   resetForm = () => {
     this.setState({
-      addNew: false
+      addNewItem: false
     })
   }
 
-  async getAllItems() {
-    const data = await Services.getAllItems();
+  async getAllCategoryAndItems() {
+    console.log('calling getAllCategoryAndItems on load')
+    const data = await Services.getAllCategoryAndItems();
+    console.log('data getAllCategoryAndItems');
+    console.log(data);
     data && this.setState({
-      items: data,
+      allCategoryAndItems: data,
       loading: false
-    });
+    })
   }
 
-  renderAddedItems = (items) => {
+  renderAddedItems = (items, category) => {
     return items.map((item, idx) => {
       const { id, name, count } = item;
       return(
@@ -40,104 +43,116 @@ class Inventory extends React.Component {
             <span> { count } </span>
           </div>
           <div className="item-right">
-            <button onClick={() => this.handleDeleteItem({ id })}><span>Delete</span></button>
-            <button onClick={() => this.handleIncrementItem({ id })}><span>Inc</span></button>
-            <button disabled={count === 0} onClick={() => this.handleDecrementItem({ id })}><span>Dec</span></button>
+            <button onClick={() => this.handleDeleteItem({ id, category })}><span>Delete</span></button>
+            <button onClick={() => this.handleIncrementItem({ id, category })}><span>Inc</span></button>
+            <button disabled={count === 0} onClick={() => this.handleDecrementItem({ id, category })}><span>Dec</span></button>
           </div>          
         </div>
       );
     })
   }
 
-  handleEditItem = () => {
-    // await Services.editItem
+  renderAllCategoryAndItems = (allCategoryAndItems) => {
+    return Object.keys(allCategoryAndItems).map((category, idx) => {
+      const items = allCategoryAndItems[category];
+      return (
+        <div key={idx} className="category">
+          <h3>Category - {category}</h3>
+          { this.renderAddedItems(items, category) }
+        </div>
+      )
+    })
   }
 
-  handleDeleteItem = async ({ id }) => {
-    await Services.deleteItem({ id });
-    this.getAllItems();
+  handleDeleteItem = async ({ id, category }) => {
+    await Services.deleteItem({ id, category });
+    this.getAllCategoryAndItems();
   }
 
   // TODO: future refactor; is response fails, discard changes and refetch list
-  handleIncrementItem = async ({ id }) => {
-    Services.updateCount({ id, type: 'inc' });
+  handleIncrementItem = async ({ id, category }) => {
+    Services.updateCount({ id, type: 'inc', category });
 
     // update count in view
-    const idx = this.state.items.findIndex(item => item.id === id);
-    let newItemList = [...this.state.items];
+    const idx = this.state.allCategoryAndItems[category].findIndex(item => item.id === id);
+    let newItemList = [...this.state.allCategoryAndItems[category]];
     newItemList[idx] = {
       ...newItemList[idx],
       count: ++newItemList[idx].count
     }
 
     this.setState({
-      items: newItemList
+      allCategoryAndItems: {
+        ...this.state.allCategoryAndItems,
+      }
     })
   }
 
   // TODO: future refactor; is response fails, discard changes and refetch list
-  handleDecrementItem = async ({ id }) => {
-    Services.updateCount({ id, type: 'dec' });
+  handleDecrementItem = async ({ id, category }) => {
+    Services.updateCount({ id, type: 'dec', category });
 
     // update count in view
-    const idx = this.state.items.findIndex(item => item.id === id);
-    let newItemList = [...this.state.items];
+    const idx = this.state.allCategoryAndItems[category].findIndex(item => item.id === id);
+    let newItemList = [...this.state.allCategoryAndItems[category]];
     newItemList[idx] = {
       ...newItemList[idx],
       count: --newItemList[idx].count
     }
 
     this.setState({
-      items: newItemList
+      allCategoryAndItems: {
+        ...this.state.allCategoryAndItems,
+      }
     })
   }
 
   
-  handleAddNew = () => {
+  handleAddNewItem = () => {
     this.setState({
-      addNew: true
+      addNewItem: true
     });
   }
 
-  handleCancelAddNew = () => {
+  handleCancelAddNewItem = () => {
     this.setState({
-      addNew: false
+      addNewItem: false
     });
   }
 
-  handleAddNewSubmit = async (e) => {
+  handleAddNewItemSubmit = async (e) => {
     e.preventDefault();
     const name = this.addItemInputRef.current.value;
     await Services.createNewItem({ name });
     this.resetForm();
-    this.getAllItems();
   }
   
   render() {
+    const that = this;
     return (
       <div>
         <h3>Inventory</h3>
-        { !!this.state.items.length &&
-          this.renderAddedItems(this.state.items)
+        { !this.state.loading && !!Object.keys(that.state.allCategoryAndItems).length &&
+          this.renderAllCategoryAndItems(this.state.allCategoryAndItems)
         }
 
         { this.state.loading &&
           <div><span>Fetching your items</span></div>
         }
 
-        { !this.state.items.length && !this.state.loading &&
+        { !Object.keys(that.state.allCategoryAndItems).length && !this.state.loading &&
           <div><span>No Items So Far</span></div>
         }
 
-        { this.state.addNew &&
-          <form onSubmit={(e) => this.handleAddNewSubmit(e)}>
+        { this.state.addNewItem &&
+          <form onSubmit={(e) => this.handleAddNewItemSubmit(e)}>
             <div><input ref={this.addItemInputRef} type="text" placeholder="Item name" autoFocus></input></div>
             <div><button type="submit">Add Item</button></div>
           </form> }
-        { this.state.addNew && 
-          <div><button id="btn-add-new" onClick={() =>this.handleCancelAddNew()}>Cancel</button></div> }
-        { !this.state.addNew &&  
-          <div><button id="btn-add-new" onClick={() =>this.handleAddNew()}>Add New</button></div> }
+        { this.state.addNewItem && 
+          <div><button id="btn-add-new" onClick={() =>this.handleCancelAddNewItem()}>Cancel</button></div> }
+        { !this.state.addNewItem &&  
+          <div><button id="btn-add-new" onClick={() =>this.handleAddNewItem()}>Add New</button></div> }
       </div>
     )
   }
