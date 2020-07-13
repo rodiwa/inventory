@@ -1,4 +1,5 @@
 import React from 'react';
+import './Inventory.css';
 import * as Services from '../../service/service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,9 +10,9 @@ class Inventory extends React.Component {
       addNewItem: false,
       addNewCategory: false,
       loading: true,
-      allCategoryAndItems: {}
+      allCategoryAndItems: {},
+      addNewItemIdx: null
     }
-    this.addItemInputRef = React.createRef();
     this.addCategoryNameInputRef = React.createRef();
     this.addCategoryFirstInputRef = React.createRef();
   }
@@ -58,27 +59,26 @@ class Inventory extends React.Component {
     return Object.keys(allCategoryAndItems).map((category, idx) => {
       const items = allCategoryAndItems[category];
       return (
-        <div key={idx} className="category">
+        <div key={idx} className={`category category-index-${idx}`}>
           <h3>Category - {category}</h3>
           { this.renderAddedItems(items, category) }
-          { this.renderAddItemToCategoryButton(category) }
+          { this.renderAddItemToCategoryButton(category, idx) }
         </div>
       )
     })
   }
 
-  renderAddItemToCategoryButton(category) {
+  renderAddItemToCategoryButton(category, idx) {
     return (
       <div>
         { this.state.addNewItem &&
-          <form onSubmit={(e) => this.handleAddNewItemSubmit(e, category)}>
-            <div><input ref={this.addItemInputRef} type="text" placeholder="Item name" autoFocus></input></div>
+          <form className={`form-add-item ${idx === this.state.addNewItemIdx ? 'show' : 'hide'}`} onSubmit={(e) => this.handleAddNewItemSubmit(e, category, idx)}>
+            <div><input ref={input => { this[`addItemInputRef${idx}`] = input }} type="text" placeholder="Item name" autoFocus></input></div>
             <div><button type="submit">Add Item</button></div>
+            <div><button id="btn-add-new" onClick={() =>this.handleCancelAddNewItem()}>Cancel</button></div>
           </form> }
-        { this.state.addNewItem && 
-          <div><button id="btn-add-new" onClick={() =>this.handleCancelAddNewItem()}>Cancel</button></div> }
         { !this.state.addNewItem &&  
-          <div><button id="btn-add-new" onClick={() =>this.handleAddNewItem()}>Add New</button></div> }
+          <div><button id="btn-add-new" onClick={() =>this.handleAddNewItem(idx)}>Add New</button></div> }
       </div>
     );
   }
@@ -156,15 +156,17 @@ class Inventory extends React.Component {
   }
 
   
-  handleAddNewItem = () => {
+  handleAddNewItem = (idx) => {
     this.setState({
-      addNewItem: true
+      addNewItem: true,
+      addNewItemIdx: idx
     });
   }
 
   handleCancelAddNewItem = () => {
     this.setState({
-      addNewItem: false
+      addNewItem: false,
+      addNewItemIdx: null
     });
   }
 
@@ -208,9 +210,10 @@ class Inventory extends React.Component {
     });
   }
 
-  handleAddNewItemSubmit = async (e, category) => {
+  handleAddNewItemSubmit = async (e, category, idx) => {
     e.preventDefault();
-    const name = this.addItemInputRef.current.value;
+    this[`addItemInputRef${idx}`].focus();
+    const name = this[`addItemInputRef${idx}`].value;
     const id = uuidv4();
     Services.createNewItem({ name, id, category });
     this.resetForm();
