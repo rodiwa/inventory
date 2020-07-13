@@ -87,8 +87,34 @@ class Inventory extends React.Component {
   }
 
   handleDeleteItem = async ({ id, category }) => {
-    await Services.deleteItem({ id, category });
-    this.getAllCategoryAndItems();
+    Services.deleteItem({ id, category });
+
+    if (this.state.allCategoryAndItems[category].length === 1) {
+      // handle edge case; if only item in category, remove the category altogether
+      // delete property from object without mutating object
+      const categoryListAfterRemovingCategory = Object.keys(this.state.allCategoryAndItems).reduce((object, key) => {
+        if (key !== category) {
+          object[key] = this.state.allCategoryAndItems[key];
+        }
+        return object;
+      }, {})
+
+      this.setState({
+        allCategoryAndItems: categoryListAfterRemovingCategory
+      });
+
+    } else {
+      const updateItemListForCategory = this.state.allCategoryAndItems[category].filter(item => {
+        return item.id !== id;
+      })
+      this.setState({
+        allCategoryAndItems: {
+          ...this.state.allCategoryAndItems,
+          [category]: updateItemListForCategory
+        }
+      });
+    }
+
   }
 
   // TODO: future refactor; is response fails, discard changes and refetch list
