@@ -28,10 +28,7 @@ class Inventory extends React.Component {
   }
 
   async getAllCategoryAndItems() {
-    console.log('calling getAllCategoryAndItems on load')
     const data = await Services.getAllCategoryAndItems();
-    console.log('data getAllCategoryAndItems');
-    console.log(data);
     data && this.setState({
       allCategoryAndItems: data,
       loading: false
@@ -87,8 +84,6 @@ class Inventory extends React.Component {
   }
 
   handleDeleteItem = async ({ id, category }) => {
-    Services.deleteItem({ id, category });
-
     if (this.state.allCategoryAndItems[category].length === 1) {
       // handle edge case; if only item in category, remove the category altogether
       // delete property from object without mutating object
@@ -102,7 +97,10 @@ class Inventory extends React.Component {
       this.setState({
         allCategoryAndItems: categoryListAfterRemovingCategory
       });
-
+      
+      // delete item and then collection also
+      await Services.deleteItem({ id, category });
+      // TODO: delete collection
     } else {
       const updateItemListForCategory = this.state.allCategoryAndItems[category].filter(item => {
         return item.id !== id;
@@ -113,8 +111,10 @@ class Inventory extends React.Component {
           [category]: updateItemListForCategory
         }
       });
-    }
 
+      // delete item only
+      Services.deleteItem({ id, category });
+    }
   }
 
   // TODO: future refactor; is response fails, discard changes and refetch list
