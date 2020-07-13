@@ -36,7 +36,7 @@ const setError = (errorCode) => {
 // }
 
 // to create/ add a new item 
-export const createNewItemApi = ({ name, id }) => {
+export const createNewItemApi = ({ name, id, category }) => {
 
   return (async () => {
     try {
@@ -45,7 +45,7 @@ export const createNewItemApi = ({ name, id }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, id }),
+        body: JSON.stringify({ name, id, category }),
       });
       if (response.status !== 200) {
         setError(response.status);

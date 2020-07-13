@@ -1,5 +1,4 @@
 import * as api from '../api/api';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * CATEGORY APIS
@@ -10,9 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 //   return getAllItemsApi;
 // }
 
-export const createNewItem = async ({ name }) => {
-  const id = uuidv4();
-  await api.createNewItemApi({ name, id });
+export const createNewItem = async ({ name, id, category }) => {
+  await api.createNewItemApi({ name, id, category });
   return;
 }
 

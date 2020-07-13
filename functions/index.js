@@ -40,7 +40,7 @@ app.put('/api/item/updateCount', (req, res) => {
 app.post('/api/item/create', (req, res) => {
   (async () => {
     try {
-      await db.collection('default').doc(req.body.id).create({
+      await db.collection(req.body.category).doc(req.body.id).create({
         id: req.body.id,
         name: req.body.name,
         count: 1
