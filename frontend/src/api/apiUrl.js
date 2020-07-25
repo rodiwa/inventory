@@ -13,11 +13,24 @@ const getBaseUrl = (env = ENV) => {
 };
 const baseUrl = getBaseUrl();
 
+/**
+ * ITEMS
+ */
 // TODO: setup url to give only url or full url
 export const getAllItemsApiUrl = '/api/item/all'; // TODO: will be reoved
 export const createNewItemApiUrl = '/api/item/create';
 export const deleteItemApiUrl = '/api/item/delete';
 export const updateCountApiUrl = '/api/item/updateCount';
 
+/**
+ * CATEGORY
+ */
 export const createNewCategoryApiUrl = '/api/category/create';
 export const getAllCategoryAndItemsApiUrl = '/api/category/all';
+
+/**
+ * USER
+ */
+export const createNewUserApiUrl = '/api/user/create';
+export const isExistingUserApiUrl = '/api/user/find';
+export const deleteUserApiUrl = '/api/user/delete';

@@ -27,12 +27,30 @@ export const updateCount = async ({ id, type, category }) => {
  * CATEGORY APIS
  */
 // TODO: check if this category API is beeing used
-export const createNewCategory = async ({ categoryName, itemName, itemId }) => {
-  await api.createNewCategoryApi({ categoryName, itemName, itemId });
+export const createNewCategory = async ({ categoryName, itemName, itemId, userId }) => {
+  await api.createNewCategoryApi({ categoryName, itemName, itemId, userId });
 }
 
 export const getAllCategoryAndItems = async () => {
   const response = await api.getAllCategoryAndItemsApi();
-  console.log(response);
+  delete response.users;
   return response;
 }
+
+/**
+ * USER APIS
+ */
+export const createNewUser = async ({ id }) => {
+  const response = await api.createNewUser({ id });
+  return response;
+}
+
+export const isUserExisting = async ({ id }) => {
+  const response = await api.isUserExisting({ id });
+  return response;
+}
+
+export const deleteUser = async ({ id }) => {
+  const response = await api.deleteUser({ id });
+  return response;
+};

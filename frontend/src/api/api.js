@@ -7,7 +7,8 @@ import * as apiUrl from './apiUrl';
 
 const {
   createNewItemApiUrl, deleteItemApiUrl, updateCountApiUrl,
-  createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl
+  createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl,
+  createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl
 } = apiUrl;
 
 const setError = (errorCode) => {
@@ -103,7 +104,7 @@ export const updateCountApi = ({ id, type, category }) => {
 /**
  * CATEGORY APIS
  */
-export const createNewCategoryApi = ({ categoryName, itemName, itemId }) => {
+export const createNewCategoryApi = ({ categoryName, itemName, itemId, userId }) => {
   return (async () => {
     try {
       const response = await fetch(createNewCategoryApiUrl, {
@@ -111,7 +112,7 @@ export const createNewCategoryApi = ({ categoryName, itemName, itemId }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ categoryName, itemName, itemId })
+        body: JSON.stringify({ categoryName, itemName, itemId, userId })
       })
       if (response.status !== 200) {
         setError(response.status);
@@ -136,4 +137,51 @@ export const getAllCategoryAndItemsApi = () => {
     }
   })();
 }
+
+/**
+ * USER APIS
+ */
+export const createNewUser = ({ id }) => {
+  return (async () => {
+    try {
+      await fetch(createNewUserApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, created: new Date().toString() })
+      });
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+};
+
+export const isUserExisting = ({ id }) => {
+  return (async () => {
+    try {
+      const response = await fetch(`${isExistingUserApiUrl}/${id}`);
+      const value = await response.text();
+      return value;
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+};
+
+export const deleteUser = ({ id }) => {
+  return (async () => {
+    try {
+      await fetch(deleteUserApiUrl, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      });
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+};
 

@@ -1,7 +1,9 @@
 import React from 'react';
 import './Inventory.css';
-import * as Services from '../../service/service';
+import * as DBServices from '../../service/db';
+// import Auth  from '../../auth/auth';
 import { v4 as uuidv4 } from 'uuid';
+import AuthButton from '../AuthButtons/AuthButtons';
 
 class Inventory extends React.Component {
   constructor(props) {
@@ -29,7 +31,7 @@ class Inventory extends React.Component {
   }
 
   async getAllCategoryAndItems() {
-    const data = await Services.getAllCategoryAndItems();
+    const data = await DBServices.getAllCategoryAndItems();
     data && this.setState({
       allCategoryAndItems: data,
       loading: false
@@ -99,7 +101,7 @@ class Inventory extends React.Component {
       });
       
       // delete item and then collection also
-      await Services.deleteItem({ id, category });
+      await DBServices.deleteItem({ id, category });
       // TODO: delete collection
     } else {
       const updateItemListForCategory = this.state.allCategoryAndItems[category].filter(item => {
@@ -113,13 +115,13 @@ class Inventory extends React.Component {
       });
 
       // delete item only
-      Services.deleteItem({ id, category });
+      DBServices.deleteItem({ id, category });
     }
   }
 
   // TODO: future refactor; is response fails, discard changes and refetch list
   handleIncrementItem = async ({ id, category }) => {
-    Services.updateCount({ id, type: 'inc', category });
+    DBServices.updateCount({ id, type: 'inc', category });
 
     // update count in view
     const idx = this.state.allCategoryAndItems[category].findIndex(item => item.id === id);
@@ -138,7 +140,7 @@ class Inventory extends React.Component {
 
   // TODO: future refactor; is response fails, discard changes and refetch list
   handleDecrementItem = async ({ id, category }) => {
-    Services.updateCount({ id, type: 'dec', category });
+    DBServices.updateCount({ id, type: 'dec', category });
 
     // update count in view
     const idx = this.state.allCategoryAndItems[category].findIndex(item => item.id === id);
@@ -192,8 +194,11 @@ class Inventory extends React.Component {
       return;
     }
 
+    // TODO: pick userId from state
+    console.log('KDn023R9meXOmgW2xkamntudAOq2') // TODO: 
+    const userId = 'KDn023R9meXOmgW2xkamntudAOq2'; // TODO
     const itemId = uuidv4();
-    await Services.createNewCategory({ categoryName, itemId, itemName });
+    await DBServices.createNewCategory({ categoryName, itemId, itemName, userId });
     this.resetForm();
 
     // add new categoy to state to update locally
@@ -215,7 +220,7 @@ class Inventory extends React.Component {
     this[`addItemInputRef${idx}`].focus();
     const name = this[`addItemInputRef${idx}`].value;
     const id = uuidv4();
-    Services.createNewItem({ name, id, category });
+    DBServices.createNewItem({ name, id, category });
     this.resetForm();
 
     // add new item to array
@@ -236,7 +241,9 @@ class Inventory extends React.Component {
     const that = this;
     return (
       <div>
+        <AuthButton />
         <h3>Inventory</h3>
+
         { !this.state.loading && !!Object.keys(that.state.allCategoryAndItems).length &&
           this.renderAllCategoryAndItems(this.state.allCategoryAndItems)
         }

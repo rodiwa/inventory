@@ -37,6 +37,7 @@ app.put('/api/item/updateCount', (req, res) => {
   })();
 });
 
+// create new item
 app.post('/api/item/create', (req, res) => {
   (async () => {
     try {
@@ -53,7 +54,7 @@ app.post('/api/item/create', (req, res) => {
   })();
 });
 
-
+// delete selected item
 app.delete('/api/item/delete', (req, res) => {
   (async () => {
     try {
@@ -93,14 +94,16 @@ app.get('/api/item/all', (req, res) => {
 /** 
  * CATEGORY APIS
  */
+// create new category
 app.post('/api/category/create', (req, res) => {
   (async () => {
     try {
-      const { categoryName, itemName, itemId } = req.body;
+      const { categoryName, itemName, itemId, userId } = req.body;
       await db.collection(categoryName).doc(itemId).create({
         id: itemId,
         name: itemName,
-        count: 1
+        count: 1,
+        users: [userId]
       })
       return res.status(200).send('ok');
     } catch(error) {
@@ -110,6 +113,7 @@ app.post('/api/category/create', (req, res) => {
   })();
 })
 
+// get all category
 app.get('/api/category/all', (req, res) => {
   (async () => {
     try {
@@ -142,5 +146,56 @@ app.get('/api/category/all', (req, res) => {
     }
   })();
 })
+
+/**
+ * USER APIS
+ */
+// create new user
+app.post('/api/user/create', (req, res) => {
+  (async () => {
+    try {
+      await db.collection('users').doc(req.body.id).create({
+        id: req.body.id,
+        created: req.body.created
+      })
+      res.status(200).send('ok');
+    } catch(error) {
+      console.error(error);
+      res.status(500).send(error);
+    }
+  })();
+});
+
+// is user existing
+app.get('/api/user/find/:id', (req, res) => {
+  (async () => {
+    try {
+      let isExisting = null;
+      const response = await db.collection('users').where('id', '==', req.params.id);
+      response.get().then(snaphot => {
+        isExisting = snaphot.docs.length > 0 ? true : false;
+        return res.status(200).send(isExisting);
+      }).catch(err => {
+        console.error(err);
+      });
+    } catch(error) {
+      console.error(error);
+      res.send(500).send(error);
+    }
+  })();
+});
+
+// deleteUser
+app.delete('/api/user/delete', (req, res) => {
+  (async () => {
+    try {
+      await db.collection('users').doc(req.body.id).delete();
+      res.status(200).send('ok');
+    } catch(error) {
+      console.error(error);
+      res.status(500).send(error);
+    }   
+  })();
+});
 
 exports.app = functions.https.onRequest(app);
