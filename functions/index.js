@@ -15,11 +15,6 @@ const db = admin.firestore();
 app.use(cors());
 app.use(express.json());
 
-// sample only
-app.get('/hello-world', (req, res) => {
-  return res.status(200).send('hello world');
-})
-
 /** 
  * ITEM APIS
  */
@@ -27,8 +22,9 @@ app.get('/hello-world', (req, res) => {
 app.put('/api/item/updateCount', (req, res) => {
   (async () => {
     try {
-      const itemRef = db.collection(req.body.category).doc(req.body.id)
-      itemRef.update({ count: admin.firestore.FieldValue.increment(req.body.count)})
+      const { categoryId, itemId, count } = req.body;
+      await db.collection('category').doc(categoryId).collection('items').doc(itemId)
+        .update({count: admin.firestore.FieldValue.increment(count)});
       return res.status(200).send('ok');
     } catch(error) {
       console.error(error);
@@ -41,9 +37,10 @@ app.put('/api/item/updateCount', (req, res) => {
 app.post('/api/item/create', (req, res) => {
   (async () => {
     try {
-      await db.collection(req.body.category).doc(req.body.id).create({
-        id: req.body.id,
-        name: req.body.name,
+      const { categoryId, itemId, itemName } = req.body;
+      await db.collection('category').doc(categoryId).collection('items').doc(itemId).create({
+        id: itemId,
+        name: itemName,
         count: 1
       })
       return res.status(200).send('ok');
@@ -58,7 +55,8 @@ app.post('/api/item/create', (req, res) => {
 app.delete('/api/item/delete', (req, res) => {
   (async () => {
     try {
-      await db.collection(req.body.category).doc(req.body.id).delete();
+      const { categoryId, itemId } = req.body;
+      await db.collection('category').doc(categoryId).collection('items').doc(itemId).delete();
       return res.status(200).send('ok');
     } catch(error) {
       console.error(error);
@@ -67,27 +65,35 @@ app.delete('/api/item/delete', (req, res) => {
   })();
 });
 
-// TODO: will be removed?
-app.get('/api/item/all', (req, res) => {
+// get all items
+app.get('/api/items/all', (req, res) => {
   (async () => {
     try {
-      const itemsArr = []
-      const itemRef = db.collection('default')
-      await itemRef.get().then(snapshot => {
-        const items = snapshot.docs;
-        for (let item of items) {
-          itemsArr.push(item.data());
-        }
-        return res.status(200).send(itemsArr);
-      }).catch(error => {
-        console.error(error);
-        return res.status(500).send(error);
-      })
+      let result = [];
+      const itemGroup = await db.collectionGroup('items').get();
+      itemGroup.forEach(item => {
+        result.push(item.data());
+      });
+      res.status(200).send(result);
     } catch(error) {
       console.error(error);
-      return res.status(500).send(error);
     }
-    return false;
+  })();
+});
+
+// get items in given category
+app.get('/api/items/:categoryId', (req, res) => {
+  (async () => {
+    try {
+      let result = [];
+      const itemGroup = await db.collection('category').doc(req.params.categoryId).collection('items').get();
+      itemGroup.forEach(item => {
+        result.push(item.data());
+      });
+      res.status(200).send(result);
+    } catch(error) {
+      console.error(error);
+    }
   })();
 });
 
@@ -98,11 +104,10 @@ app.get('/api/item/all', (req, res) => {
 app.post('/api/category/create', (req, res) => {
   (async () => {
     try {
-      const { categoryName, itemName, itemId, userId } = req.body;
-      await db.collection(categoryName).doc(itemId).create({
-        id: itemId,
-        name: itemName,
-        count: 1,
+      const { categoryName, categoryId, userId } = req.body;
+      await db.collection('category').doc(categoryId).create({
+        id: categoryId,
+        name: categoryName,
         users: [userId]
       })
       return res.status(200).send('ok');
@@ -113,39 +118,82 @@ app.post('/api/category/create', (req, res) => {
   })();
 })
 
+// get all category - old
+// app.get('/api/category/all', (req, res) => {
+//   (async () => {
+//     try {
+//       let arrCollections = [];
+//       let arrItems = [];
+//       let allCategoryData = {};
+//       const allCollectionsRef = await db.listCollections();
+//       // get all collections first
+//       for (let collection of allCollectionsRef) {
+//         arrCollections.push(collection.id);
+//         allCategoryData[collection.id] = [];
+//       }
+//       // for each collection, get its items next
+//       for (let category of Object.keys(allCategoryData)) {
+//         // pass in a async reference, instead of having await in a loop
+//         // TODO: instead of await in loop, find better/parallel approach
+//         // eslint-disable-next-line no-await-in-loop
+//         const allItemsRef = await db.collection(category).get();
+//         const items = allItemsRef.docs;
+//         // TODO: avoid nested for-loops
+//         for (let item of items) {
+//           allCategoryData[category].push(item.data());
+//         }
+
+//       }
+//       return res.status(200).send(allCategoryData);
+//     } catch(error) {
+//       console.error(error);
+//       return res.status(500).send(error);
+//     }
+//   })();
+// })
+
 // get all category
+// TODO: 1st attempt; get category+ items in one shot
+// TODO: else, get category, items separately but recursively
 app.get('/api/category/all', (req, res) => {
   (async () => {
     try {
-      let arrCollections = [];
-      let arrItems = [];
-      let allCategoryData = {};
-      const allCollectionsRef = await db.listCollections();
-      // get all collections first
-      for (let collection of allCollectionsRef) {
-        arrCollections.push(collection.id);
-        allCategoryData[collection.id] = [];
-      }
-      // for each collection, get its items next
-      for (let category of Object.keys(allCategoryData)) {
-        // pass in a async reference, instead of having await in a loop
-        // TODO: instead of await in loop, find better/parallel approach
-        // eslint-disable-next-line no-await-in-loop
-        const allItemsRef = await db.collection(category).get();
-        const items = allItemsRef.docs;
-        // TODO: avoid nested for-loops
-        for (let item of items) {
-          allCategoryData[category].push(item.data());
-        }
-
-      }
-      return res.status(200).send(allCategoryData);
+      let result = [];
+      const categoryGroup = await db.collection('category').get();
+      categoryGroup.forEach(category => {
+        result.push(category.data());
+      });
+      res.status(200).send(result);
     } catch(error) {
       console.error(error);
-      return res.status(500).send(error);
     }
   })();
-})
+});
+
+// get all items, soreted by category
+// TODO: 2 ways to do this; get all categories, all items (separately and) parallely and mcombine them on client side
+// TODO: or, simply get category, then its items recursively; could be more expensive
+app.get('/api/category/all/sorted', (req, res) => {
+  (async () => {
+    try {
+      let result = [];
+      const categoryGroup = await db.collection('category').get();
+      categoryGroup.forEach(async (category) => {
+        let categoryData = category.data();
+        categoryData.items = [];
+        const itemsRef = await db.collection('category').doc(categoryData.id).collection('items').get();
+        // TODO: fix this, adding this, return empty array, else works good
+        // itemsRef.forEach(async item => {
+        //   categoryData.items.push(await item.data());
+        // });
+        result.push(categoryData);
+      });
+      res.status(200).send(result);
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+});
 
 /**
  * USER APIS
