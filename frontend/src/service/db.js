@@ -1,34 +1,33 @@
 import * as api from '../api/api';
 
 /**
- * CATEGORY APIS
+ * ITEM APIS
  */
-// TODO: will be removed
-// export const getAllItems = async () => {
-//   const getAllItemsApi = await api.getAllItemsApi();
-//   return getAllItemsApi;
-// }
-
-export const createNewItem = async ({ name, id, category }) => {
-  await api.createNewItemApi({ name, id, category });
+export const createNewItem = async ({ categoryId, itemId, itemName }) => {
+  await api.createNewItemApi({ categoryId, itemId, itemName });
   return;
 }
 
-export const deleteItem = async ({ id, category }) => {
-  await api.deleteItemApi({ id, category });
+export const getItemsInCategory = async ({ categoryId }) => {
+  const response = await api.getItemsInCategoryApi({ categoryId });
+  return response;
 }
 
-export const updateCount = async ({ id, type, category }) => {
-  const response = await api.updateCountApi({ id, type, category });
-  return response;
+export const deleteItem = async ({categoryId, itemId }) => {
+  await api.deleteItemApi({categoryId, itemId });
+}
+
+export const updateCount = async ({ categoryId, itemId, count }) => {
+  await api.updateCountApi({ categoryId, itemId, count });
 }
 
 /**
  * CATEGORY APIS
  */
-// TODO: check if this category API is beeing used
-export const createNewCategory = async ({ categoryName, itemName, itemId, userId }) => {
-  await api.createNewCategoryApi({ categoryName, itemName, itemId, userId });
+// new one
+export const createNewCategory = async ({ categoryName, categoryId, userId }) => {
+  console.log('createNewCategory db');
+  await api.createNewCategoryApi({ categoryName, categoryId, userId });
 }
 
 export const getAllCategoryAndItems = async () => {

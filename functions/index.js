@@ -66,7 +66,7 @@ app.delete('/api/item/delete', (req, res) => {
 });
 
 // get all items
-app.get('/api/items/all', (req, res) => {
+app.get('/api/item/all', (req, res) => {
   (async () => {
     try {
       let result = [];

@@ -7,7 +7,7 @@ import * as apiUrl from './apiUrl';
 
 const {
   createNewItemApiUrl, deleteItemApiUrl, updateCountApiUrl,
-  createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl,
+  createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl, getItemsInCategoryApiUrl,
   createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl
 } = apiUrl;
 
@@ -36,9 +36,9 @@ const setError = (errorCode) => {
 //   })();
 // }
 
-// to create/ add a new item 
-export const createNewItemApi = ({ name, id, category }) => {
 
+// this is new one
+export const createNewItemApi = ({ categoryId, itemId, itemName }) => {
   return (async () => {
     try {
       const response = await fetch(createNewItemApiUrl, {
@@ -46,7 +46,7 @@ export const createNewItemApi = ({ name, id, category }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, id, category }),
+        body: JSON.stringify({ categoryId, itemId, itemName }),
       });
       if (response.status !== 200) {
         setError(response.status);
@@ -58,8 +58,25 @@ export const createNewItemApi = ({ name, id, category }) => {
   })();
 }
 
+// this is new one
+export const getItemsInCategoryApi = ({ categoryId }) => {
+  return (async () => {
+    try {
+      const response = await fetch(`${getItemsInCategoryApiUrl}/${categoryId}`);
+      if (response.status !== 200) {
+        setError(response.status);
+      };
+      const data = await response.json();
+      return data;
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+}
+
 // to delete an item
-export const deleteItemApi = ({ id, category }) => {
+// this is new one
+export const deleteItemApi = ({categoryId, itemId }) => {
   return (async () => {
     try {
       const response = await fetch(deleteItemApiUrl, {
@@ -67,12 +84,12 @@ export const deleteItemApi = ({ id, category }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id, category })
+        body: JSON.stringify({categoryId, itemId })
       })
       if (response.status !== 200) {
         setError(response.status);
       }
-      return id;
+      return itemId;
     } catch(error) {
       console.error(error)
     }
@@ -80,16 +97,15 @@ export const deleteItemApi = ({ id, category }) => {
 }
 
 // increment decrement count by 1
-export const updateCountApi = ({ id, type, category }) => {
+export const updateCountApi = ({ categoryId, itemId, count }) => {
   return (async () => {
     try {
-      const count = type === 'inc' ? 1 : -1;
       const response = await fetch(updateCountApiUrl, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id, count, category })
+        body: JSON.stringify({ categoryId, itemId, count })
       });
       if (response.status !== 200) {
         setError(response.status);
@@ -104,15 +120,17 @@ export const updateCountApi = ({ id, type, category }) => {
 /**
  * CATEGORY APIS
  */
-export const createNewCategoryApi = ({ categoryName, itemName, itemId, userId }) => {
+// new one
+export const createNewCategoryApi = ({ categoryName, categoryId, userId }) => {
   return (async () => {
     try {
+      console.log('createNewCategory api');
       const response = await fetch(createNewCategoryApiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ categoryName, itemName, itemId, userId })
+        body: JSON.stringify({ categoryName, categoryId, userId })
       })
       if (response.status !== 200) {
         setError(response.status);

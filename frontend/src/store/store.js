@@ -3,10 +3,14 @@ import { logger } from 'redux-logger';
 
 import authState from './auth/auth.state';
 import dbState from './db/db.state';
+import userState from './user/user.state';
+import appState from './app/app.state';
 
 const model = {
   auth: authState,
-  db: dbState
+  db: dbState,
+  user: userState,
+  app: appState
 };
 
 const config = {

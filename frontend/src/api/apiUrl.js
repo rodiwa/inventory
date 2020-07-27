@@ -16,21 +16,22 @@ const baseUrl = getBaseUrl();
 /**
  * ITEMS
  */
-// TODO: setup url to give only url or full url
-export const getAllItemsApiUrl = '/api/item/all'; // TODO: will be reoved
+export const updateCountApiUrl = '/api/item/updateCount';
 export const createNewItemApiUrl = '/api/item/create';
 export const deleteItemApiUrl = '/api/item/delete';
-export const updateCountApiUrl = '/api/item/updateCount';
+export const getAllItemsApiUrl = '/api/item/all';
+export const getItemsInCategoryApiUrl = '/api/items/'; // '/api/items/:categoryId'
 
 /**
  * CATEGORY
  */
 export const createNewCategoryApiUrl = '/api/category/create';
 export const getAllCategoryAndItemsApiUrl = '/api/category/all';
+// export const getAllItemsCategorised = '/api/category/all/sorted';
 
 /**
  * USER
  */
 export const createNewUserApiUrl = '/api/user/create';
-export const isExistingUserApiUrl = '/api/user/find';
+export const isExistingUserApiUrl = '/api/user/find'; // '/api/user/find/:id'
 export const deleteUserApiUrl = '/api/user/delete';
