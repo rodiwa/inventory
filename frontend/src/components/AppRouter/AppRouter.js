@@ -10,7 +10,7 @@ const AppRouter = () => {
     <Router>
       <Switch>
         <Route exact path="/" component={CategoryList}></Route>
-        <Route exact path="/items/:id" component={ItemList}></Route>
+        <Route exact path="/items/:categoryId" component={ItemList}></Route>
         <Route component={PageNotFound}></Route>
       </Switch>
     </Router>

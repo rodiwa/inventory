@@ -82,6 +82,9 @@ app.get('/api/item/all', (req, res) => {
 });
 
 // get items in given category
+// TODO: we may not use this. this works best for a one time fetch, but to imlement
+// realtime sync, its best to call this directly from actions (onSnaphot),
+// and then update the ist accordingly. 
 app.get('/api/items/:categoryId', (req, res) => {
   (async () => {
     try {

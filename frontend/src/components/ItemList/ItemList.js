@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
-const ItemList = () => {
+const ItemList = (props) => {
   const addNewItemRef = React.createRef();
   const createNewItemAction = useStoreActions(actions => actions.db.createNewItemAction);
-  const categoryId = useStoreState(state => state.app.category);
+  // const categoryId = useStoreState(state => state.app.category); // TODO: state resets on refresh, hence issue
+  const { categoryId } = props.match.params; 
   const itemList = useStoreState(state => state.db.items);
   const getItemsInCategoryAction = useStoreActions(actions => actions.db.getItemsInCategoryAction);
   const deleteItemAction = useStoreActions(actions => actions.db.deleteItemAction);
   const updateItemCountAction = useStoreActions(actions => actions.db.updateItemCountAction);
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {

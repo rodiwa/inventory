@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
+import 'firebase/firestore';
 import 'firebaseui/dist/firebaseui.css';
 
 class Auth {
@@ -49,6 +50,10 @@ class Auth {
 
   getAuthReference() {
     return firebase.auth();
+  }
+
+  getCloudStoreReference() {
+    return firebase.firestore();
   }
   
   onLogout() {
