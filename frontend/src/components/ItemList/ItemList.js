@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link, useHistory } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 const ItemList = (props) => {
-  const addNewItemRef = React.createRef();
+  // let addNewItemRef = React.createRef();
+  let addNewItemRef = React.useRef();
   const createNewItemAction = useStoreActions(actions => actions.db.createNewItemAction);
   // const categoryId = useStoreState(state => state.app.category); // TODO: state resets on refresh, hence issue
   const { categoryId } = props.match.params; 
@@ -12,10 +13,12 @@ const ItemList = (props) => {
   const getItemsInCategoryAction = useStoreActions(actions => actions.db.getItemsInCategoryAction);
   const deleteItemAction = useStoreActions(actions => actions.db.deleteItemAction);
   const updateItemCountAction = useStoreActions(actions => actions.db.updateItemCountAction);
+  const deleteCategoryAction = useStoreActions(actions => actions.db.deleteCategoryAction);
   const history = useHistory();
 
   useEffect(() => {
     (async () => {
+      addNewItemRef.current.focus();
       await getItemsInCategoryAction({ categoryId });
     })();
   }, []);
@@ -42,6 +45,14 @@ const ItemList = (props) => {
     updateItemCountAction({ categoryId, itemId, count });
   }
 
+  const onDeleteCategory = async () => {
+    const isConfirm = window.confirm("Sure you wanna delete this category? This cannot be undone!");
+    if (isConfirm) {
+      await deleteCategoryAction({ categoryId });
+      history.push('/');
+    }
+  }
+
   // CHILD COMPONENTS
   const List = (props) => {
     const { itemList } = props;
@@ -60,7 +71,7 @@ const ItemList = (props) => {
                 <div>
                   <input onClick={(e) => onUpdateCount(e, item.id, 1)} defaultValue="+" />
                   <input onClick={(e) => onDeleteItem(e, item.id)} defaultValue="D" />
-                  <input onClick={(e) => onUpdateCount(e, item.id, -1)} defaultValue="-" />
+                  <input onClick={(e) => onUpdateCount(e, item.id, -1)} defaultValue="-" disabled={item.count < 1} />
                 </div>
               </div>
             );
@@ -79,6 +90,10 @@ const ItemList = (props) => {
       <form onSubmit={onAddNewItem}>
         <input type="text" ref={addNewItemRef} placeholder="Add New Item" />
       </form>
+
+      <div>
+        <input type="text" onClick={onDeleteCategory} defaultValue="Delete this category" />
+      </div>
 
       <div>
         <Link to={`/`}><span>Home</span></Link>

@@ -31,6 +31,17 @@ const dbActions = {
     })();
   }),
 
+  deleteCategoryAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId } = payload;
+        await DB.deleteCategory({ categoryId });
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
+
   createNewItemAction: thunk((action, payload) => {
     return (async () => {
       try {

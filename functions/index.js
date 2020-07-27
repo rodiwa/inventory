@@ -74,9 +74,10 @@ app.get('/api/item/all', (req, res) => {
       itemGroup.forEach(item => {
         result.push(item.data());
       });
-      res.status(200).send(result);
+      return res.status(200).send(result);
     } catch(error) {
       console.error(error);
+      return res.status(500).send(error);
     }
   })();
 });
@@ -96,6 +97,7 @@ app.get('/api/items/:categoryId', (req, res) => {
       res.status(200).send(result);
     } catch(error) {
       console.error(error);
+      return res.status(500).send(error);
     }
   })();
 });
@@ -166,9 +168,10 @@ app.get('/api/category/all', (req, res) => {
       categoryGroup.forEach(category => {
         result.push(category.data());
       });
-      res.status(200).send(result);
+      return res.status(200).send(result);
     } catch(error) {
       console.error(error);
+      return res.status(500).send(error);
     }
   })();
 });
@@ -191,12 +194,32 @@ app.get('/api/category/all/sorted', (req, res) => {
         // });
         result.push(categoryData);
       });
-      res.status(200).send(result);
+      return res.status(200).send(result);
     } catch(error) {
       console.error(error);
+      return res.status(500).send(error);
     }
   })();
 });
+
+// deletes given category (and its items) 
+app.delete('/api/category/delete', (req, res) => {
+  (async () => {
+    try {
+      const { categoryId } = req.body;
+      const allItemsInCategory = await db.collection('category').doc(categoryId).collection('items').get();
+      allItemsInCategory.forEach(async (snapshot) => {
+        const { id } = snapshot.data();
+        await db.collection('category').doc(categoryId).collection('items').doc(id).delete();
+      });
+      await db.collection('category').doc(categoryId).delete();
+      return res.status(200).send(categoryId);
+    } catch(error) {
+      console.error(error);
+      return res.status(500).send(error);
+    }
+  })();
+})
 
 /**
  * USER APIS

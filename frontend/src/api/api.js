@@ -8,7 +8,7 @@ import * as apiUrl from './apiUrl';
 const {
   createNewItemApiUrl, deleteItemApiUrl, updateCountApiUrl,
   createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl, getItemsInCategoryApiUrl,
-  createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl
+  createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl, deleteCategoryApiUrl
 } = apiUrl;
 
 const setError = (errorCode) => {
@@ -150,6 +150,26 @@ export const getAllCategoryAndItemsApi = () => {
         setError(response.status);
       }
       return response.json();
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+}
+
+export const deleteCategoryApi = ({ categoryId }) => {
+  return (async () => {
+    try {
+      const response = await fetch(deleteCategoryApiUrl, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ categoryId })
+      });
+      if (response.status !== 200) {
+        setError(response.status);
+      }
+      return categoryId;
     } catch(error) {
       console.error(error);
     }
