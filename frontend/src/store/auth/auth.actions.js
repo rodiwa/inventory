@@ -12,14 +12,6 @@ const authActions = {
       const response = await Auth.getAuthReference().signOut();
     })();
   }),
-  getUserLogInAction: thunk(actions => {
-    try {
-      const loginStatus = Auth.isLoggedIn();
-      actions.setLoginStatus(loginStatus);
-    } catch(error) {
-      console.error(error);
-    }
-  }),
   setGoogleLoginUI: thunk(actions => {
     (() => {
       Auth.renderFirebaseUiAuth();
@@ -52,7 +44,7 @@ const authActions = {
 
           if (isUserExisting === 'false') {
             console.log(`CREATING NEW USER - ${uid}`)
-            DB.createNewUser({ id: uid });
+            await DB.createNewUser({ id: uid });
           }
 
           actions.setLoginUserDetails(userDetails);

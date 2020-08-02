@@ -7,7 +7,7 @@ const CategoryList = () => {
   const history = useHistory();
   const addNewCategoryRef = React.useRef();
   const categoryList = useStoreState(state => state.db.category);
-  const userId = useStoreState(state => state.user.userId);
+  const userId = useStoreState(state => state.auth.user.uid);
   const getAllCategoryAction = useStoreActions(actions => actions.db.getAllCategoryAction);
   const createNewCategoryAction = useStoreActions(actions => actions.db.createNewCategoryAction);
   const setCurrentCategoryAction = useStoreActions(actions => actions.app.setCurrentCategoryAction);

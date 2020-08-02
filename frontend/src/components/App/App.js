@@ -6,27 +6,20 @@ import GuestUser from '../Guest/Guest';
 import { useStoreState, useStoreActions } from 'easy-peasy';
 
 function App() {
-  // const isUserLoggedIn = useStoreState(state => state.auth.isLoggedIn);
-  // const getUserLogInAction = useStoreActions(actions => actions.auth.getUserLogInAction);
-  // const setAuthChangeListener = useStoreActions(actions => actions.auth.setAuthChangeListener);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     await getUserLogInAction();
-  //   })();
-  // }, [isUserLoggedIn]);
+  const isUserLoggedIn = useStoreState(state => state.auth.isLoggedIn);
+  const setAuthChangeListener = useStoreActions(actions => actions.auth.setAuthChangeListener);
 
   useEffect(() => {
     (() => {
-      // setAuthChangeListener();
+      setAuthChangeListener();
     })();
   }, []);
 
   return (
     <div className="App">
       {/* TODO: use this to use with login */}
-      {/* { isUserLoggedIn ? <CategoryList /> : <GuestUser /> } */}
-      <AppRouter />
+      { isUserLoggedIn ? <AppRouter /> : <GuestUser /> }
+      {/* <AppRouter /> */}
     </div>
   );
 }
