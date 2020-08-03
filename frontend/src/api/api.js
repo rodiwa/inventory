@@ -124,7 +124,6 @@ export const updateCountApi = ({ categoryId, itemId, count }) => {
 export const createNewCategoryApi = ({ categoryName, categoryId, userId }) => {
   return (async () => {
     try {
-      console.log('createNewCategory api');
       const response = await fetch(createNewCategoryApiUrl, {
         method: 'POST',
         headers: {

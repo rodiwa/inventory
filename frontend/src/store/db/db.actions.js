@@ -24,8 +24,6 @@ const dbActions = {
       try {
         const { categoryName, categoryId, userId } = payload;
         const response = await DB.createNewCategory({ categoryName, categoryId, userId });
-        console.log('createNewCategory actions');
-        // action.setAllCategories(response);
       } catch(error) {
         console.error(error);
       }
@@ -48,7 +46,6 @@ const dbActions = {
       try {
         const { categoryId, itemId, itemName } = payload;
         const response = await DB.createNewItem({ categoryId, itemId, itemName });
-        console.log('createNewItemAction actions');
       } catch(error) {
         console.error(error);
       }

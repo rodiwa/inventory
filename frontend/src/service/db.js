@@ -26,7 +26,6 @@ export const updateCount = async ({ categoryId, itemId, count }) => {
  */
 // new one
 export const createNewCategory = async ({ categoryName, categoryId, userId }) => {
-  console.log('createNewCategory db');
   await api.createNewCategoryApi({ categoryName, categoryId, userId });
 }
 

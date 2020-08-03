@@ -9,7 +9,7 @@ const authActions = {
   setLoginStatus: action((state, status) => state.isLoggedIn = status),
   onLogoutAction: thunk(actions => {
     (async () => {
-      const response = await Auth.getAuthReference().signOut();
+      await Auth.getAuthReference().signOut().then(() => { console.log('sign out success') });
     })();
   }),
   setGoogleLoginUI: thunk(actions => {
@@ -21,7 +21,6 @@ const authActions = {
     (async () => {
       await Auth.getAuthReference().onAuthStateChanged(async (user) => {
         if (user) {
-          console.log('LOG IN')
           var displayName = user.displayName;
           var email = user.email;
           var emailVerified = user.emailVerified;
@@ -43,14 +42,12 @@ const authActions = {
           const isUserExisting = await DB.isUserExisting({ id: uid });
 
           if (isUserExisting === 'false') {
-            console.log(`CREATING NEW USER - ${uid}`)
             await DB.createNewUser({ id: uid });
           }
 
           actions.setLoginUserDetails(userDetails);
           actions.setLoginStatus(true);
         } else {
-          console.log('is logged out');
           actions.setLoginUserDetails(null);
           actions.setLoginStatus(false);
         }

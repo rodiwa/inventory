@@ -14,7 +14,12 @@ const model = {
 };
 
 const config = {
-  middleware: [logger]
+  middleware: []
 };
+
+// show logger for devs only
+if (process.env.NODE_ENV !== 'production') {
+  config.middleware.push(logger);
+}
 
 export const store = createStore(model, config);

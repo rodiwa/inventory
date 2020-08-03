@@ -16,7 +16,7 @@ const CategoryList = () => {
   useEffect(() => {
     setCurrentCategoryAction(null);
     setItemsInCategoryAction([]);
-  });
+  }, []);
 
   useEffect(() => {
     (async () => {

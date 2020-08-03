@@ -195,7 +195,6 @@ class Inventory extends React.Component {
     }
 
     // TODO: pick userId from state
-    console.log('KDn023R9meXOmgW2xkamntudAOq2') // TODO: 
     const userId = 'KDn023R9meXOmgW2xkamntudAOq2'; // TODO
     const itemId = uuidv4();
     await DBServices.createNewCategory({ categoryName, itemId, itemName, userId });

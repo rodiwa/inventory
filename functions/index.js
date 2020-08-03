@@ -94,7 +94,7 @@ app.get('/api/items/:categoryId', (req, res) => {
       itemGroup.forEach(item => {
         result.push(item.data());
       });
-      res.status(200).send(result);
+      return res.status(200).send(result);
     } catch(error) {
       console.error(error);
       return res.status(500).send(error);
