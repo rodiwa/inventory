@@ -33,7 +33,7 @@ class Auth {
         }
       },
       signInFlow: 'popup',
-      signInSuccessUrl: '',
+      signInSuccessUrl: '/',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       ],
