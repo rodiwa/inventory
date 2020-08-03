@@ -142,10 +142,10 @@ export const createNewCategoryApi = ({ categoryName, categoryId, userId }) => {
   })();
 }
 
-export const getAllCategoryAndItemsApi = () => {
+export const getAllCategoryAndItemsApi = ({ userId }) => {
   return (async () => {
     try {
-      const response = await fetch(getAllCategoryAndItemsApiUrl);
+      const response = await fetch(`${getAllCategoryAndItemsApiUrl}/${userId}`);
       if (response.status !== 200) {
         setError(response.status);
       }

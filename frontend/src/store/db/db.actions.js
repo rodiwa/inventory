@@ -10,7 +10,8 @@ const dbActions = {
   getAllCategoryAction: thunk((action, payload) => {
     return (async () => {
       try {
-        const response = await DB.getAllCategoryAndItems();
+        const { userId } = payload;
+        const response = await DB.getAllCategoryAndItems({ userId });
         action.setAllCategories(response);
       } catch(error) {
         console.error(error);

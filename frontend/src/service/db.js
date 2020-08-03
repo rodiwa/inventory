@@ -30,8 +30,8 @@ export const createNewCategory = async ({ categoryName, categoryId, userId }) =>
   await api.createNewCategoryApi({ categoryName, categoryId, userId });
 }
 
-export const getAllCategoryAndItems = async () => {
-  const response = await api.getAllCategoryAndItemsApi();
+export const getAllCategoryAndItems = async ({ userId }) => {
+  const response = await api.getAllCategoryAndItemsApi({ userId });
   delete response.users;
   return response;
 }

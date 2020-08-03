@@ -160,11 +160,12 @@ app.post('/api/category/create', (req, res) => {
 // get all category
 // TODO: 1st attempt; get category+ items in one shot
 // TODO: else, get category, items separately but recursively
-app.get('/api/category/all', (req, res) => {
+app.get('/api/category/all/:userId', (req, res) => {
   (async () => {
     try {
       let result = [];
-      const categoryGroup = await db.collection('category').get();
+      const { userId } = req.params;
+      const categoryGroup = await db.collection('category').where('users', 'array-contains', userId).get();
       categoryGroup.forEach(category => {
         result.push(category.data());
       });

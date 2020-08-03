@@ -20,9 +20,9 @@ const CategoryList = () => {
 
   useEffect(() => {
     (async () => {
-      const list = await getAllCategoryAction();
+      await getAllCategoryAction({ userId });
     })();
-  }, []);
+  }, [userId]);
 
   // EVENT HANDLERS
   const onAddNewCategory = async (e) => {
