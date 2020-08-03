@@ -4,8 +4,6 @@ import * as DB from '../../service/db';
 // TODO: special case for getting firestore reference directly into actions
 import Auth from '../../service/auth';
 
-
-
 const dbActions = {
   getAllCategoryAction: thunk((action, payload) => {
     return (async () => {
@@ -108,7 +106,27 @@ const dbActions = {
     })();
   }),
 
+  shareCategoryAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId, emailId } = payload;
+        await DB.shareCategory({ categoryId, emailId });
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
 
+  removeShareCategoryAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId, userId } = payload;
+        await DB.shareCategory({ categoryId, userId });
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
   
   /**
    * ACTIONS

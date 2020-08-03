@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link, useHistory } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
+import * as EmailValidator from 'email-validator';
 
 const ItemList = (props) => {
-  // let addNewItemRef = React.createRef();
-  let addNewItemRef = React.useRef();
+  const addNewItemRef = React.useRef();
+  const shareCategoryRef = React.useRef();
   const createNewItemAction = useStoreActions(actions => actions.db.createNewItemAction);
   // const categoryId = useStoreState(state => state.app.category); // TODO: state resets on refresh, hence issue
   const { categoryId } = props.match.params; 
@@ -14,6 +15,8 @@ const ItemList = (props) => {
   const deleteItemAction = useStoreActions(actions => actions.db.deleteItemAction);
   const updateItemCountAction = useStoreActions(actions => actions.db.updateItemCountAction);
   const deleteCategoryAction = useStoreActions(actions => actions.db.deleteCategoryAction);
+  const shareCategoryAction = useStoreActions(actions => actions.db.shareCategoryAction);
+  const removeShareCategoryAction = useStoreActions(actions => actions.db.removeShareCategoryAction);
   const history = useHistory();
 
   useEffect(() => {
@@ -43,6 +46,17 @@ const ItemList = (props) => {
   const onUpdateCount = (e, itemId, count) => {
     e.preventDefault();
     updateItemCountAction({ categoryId, itemId, count });
+  }
+
+  const onShareCategory = async (e) => {
+    e.preventDefault();
+    const emailId = shareCategoryRef.current.value;
+    if (!EmailValidator.validate(emailId)) {
+      // TODO: add alert toaster here
+      return console.error('Enter valid email only');
+    }
+    await shareCategoryAction({ categoryId, emailId });
+    shareCategoryRef.current.value = "";
   }
 
   const onDeleteCategory = async () => {
@@ -94,6 +108,10 @@ const ItemList = (props) => {
       <div>
         <input type="text" onClick={onDeleteCategory} defaultValue="Delete this category" />
       </div>
+
+      <form onSubmit={onShareCategory}>
+        <input type="text" ref={shareCategoryRef} placeholder="Add Email Id To Share With" />
+      </form>
 
       <div>
         <Link to={`/`}><span>Home</span></Link>

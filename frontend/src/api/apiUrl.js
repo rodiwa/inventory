@@ -28,6 +28,8 @@ export const getItemsInCategoryApiUrl = '/api/items/'; // '/api/items/:categoryI
 export const createNewCategoryApiUrl = '/api/category/create';
 export const getAllCategoryAndItemsApiUrl = '/api/category/all'; // '/api/category/all/:userId'
 export const deleteCategoryApiUrl = '/api/category/delete';
+export const shareCategoryApiUrl = '/api/category/share';
+export const removeShareCategoryApiUrl = '/api/category/share/remove';
 // export const getAllItemsCategorised = '/api/category/all/sorted';
 
 /**

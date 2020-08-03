@@ -39,11 +39,19 @@ export const deleteCategory = async ({ categoryId }) => {
   await api.deleteCategoryApi({ categoryId });
 }
 
+export const shareCategory = async ({ categoryId, emailId }) => {
+  await api.shareCategoryApi({ categoryId, emailId });
+}
+
+export const removeShareCategory = async ({ categoryId, userId }) => {
+  await api.removeShareCategoryApi({ categoryId, userId });
+}
+
 /**
  * USER APIS
  */
-export const createNewUser = async ({ id }) => {
-  const response = await api.createNewUser({ id });
+export const createNewUser = async ({ id, email }) => {
+  const response = await api.createNewUser({ id, email });
   return response;
 }
 

@@ -222,6 +222,53 @@ app.delete('/api/category/delete', (req, res) => {
   })();
 })
 
+// share category with other email ids
+app.post('/api/category/share', (req, res) => {
+  (async () => {
+    try {
+      const { categoryId, emailId } = req.body;
+      let userId = null;
+      // check if given user id exists in user list
+      // TODO: code duplication; use functions for common code
+      const response = await db.collection('users').where('email', '==', emailId);
+      const snapshot = await response.get();
+      if (!snapshot.docs.length) {
+        return res.status(500).send('User does not exist');
+      }
+
+      // get uid from user object if user exists
+      for (let user of snapshot.docs) {
+        userId = user.data().id;
+      }
+
+      // add that userId to this category's user list
+      await db.collection('category').doc(categoryId).update({
+        users: admin.firestore.FieldValue.arrayUnion(userId)
+      });
+      return res.status(200).end();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
+
+// un-share category with other email ids
+app.post('/api/category/share/remove', (req, res) => {
+  (async () => {
+    try {
+      const { categoryId, userId } = req.body;
+      await db.collection('category').doc(categoryId).update({
+        users: admin.firestore.FieldValue.arrayRemove(userId)
+      });
+      return res.status(200).end();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
+
 /**
  * USER APIS
  */
@@ -229,8 +276,10 @@ app.delete('/api/category/delete', (req, res) => {
 app.post('/api/user/create', (req, res) => {
   (async () => {
     try {
-      await db.collection('users').doc(req.body.id).create({
-        id: req.body.id,
+      const { id, email } = req.body;
+      await db.collection('users').doc(id).create({
+        id,
+        email,
         created: req.body.created
       })
       res.status(200).send('ok');

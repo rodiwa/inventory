@@ -8,7 +8,8 @@ import * as apiUrl from './apiUrl';
 const {
   createNewItemApiUrl, deleteItemApiUrl, updateCountApiUrl,
   createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl, getItemsInCategoryApiUrl,
-  createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl, deleteCategoryApiUrl
+  createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl, deleteCategoryApiUrl,
+  shareCategoryApiUrl, removeShareCategoryApiUrl
 } = apiUrl;
 
 const setError = (errorCode) => {
@@ -175,10 +176,50 @@ export const deleteCategoryApi = ({ categoryId }) => {
   })();
 }
 
+export const shareCategoryApi = ({ categoryId, emailId }) => {
+  return (async () => {
+    try {
+      const response = await fetch(shareCategoryApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ categoryId, emailId })
+      });
+      if (response.status !== 200) {
+        return setError(response.status);
+      }
+      return categoryId;
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+}
+
+export const removeShareCategoryApi = ({ categoryId, userId }) => {
+  return (async () => {
+    try {
+      const response = await fetch(removeShareCategoryApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ categoryId, userId })
+      });
+      if (response.status !== 200) {
+        setError(response.status);
+      }
+      return categoryId;
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+}
+
 /**
  * USER APIS
  */
-export const createNewUser = ({ id }) => {
+export const createNewUser = ({ id, email }) => {
   return (async () => {
     try {
       await fetch(createNewUserApiUrl, {
@@ -186,7 +227,7 @@ export const createNewUser = ({ id }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id, created: new Date().toString() })
+        body: JSON.stringify({ id, created: new Date().toString(), email })
       });
     } catch(error) {
       console.error(error);
