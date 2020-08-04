@@ -121,7 +121,7 @@ const dbActions = {
     return (async () => {
       try {
         const { categoryId, userId } = payload;
-        await DB.shareCategory({ categoryId, userId });
+        await DB.removeShareCategory({ categoryId, userId });
       } catch(error) {
         console.error(error);
       }
@@ -131,8 +131,10 @@ const dbActions = {
   getAllCategoryShareAction: thunk((actions, payload) => {
     return (async () => {
       try {
-        const { categoryId } = payload;
-        await DB.getAllCategoryShare({ categoryId });
+        const { categoryId, userId } = payload;
+        let response = await DB.getAllCategoryShare({ categoryId });
+        response = response.filter(share => share.userId !== userId)
+        actions.setAllCategoryShareAction(response);
       } catch(error) {
         console.error(error);
       }
@@ -148,6 +150,10 @@ const dbActions = {
   
   setItemsInCategoryAction: action((state, payload) => {
     state.items = payload;
+  }),
+
+  setAllCategoryShareAction: action((state, payload) => {
+    state.share = payload;
   }),
   
 }

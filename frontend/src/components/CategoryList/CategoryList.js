@@ -70,7 +70,7 @@ const CategoryList = () => {
 
   return (
     <div>
-      <h2>CategoryList</h2>
+      <h2>Category</h2>
       <List categoryItems={categoryList} />
       <form onSubmit={onAddNewCategory}>
         <input type="text" ref={addNewCategoryRef} placeholder="Add New Category" />

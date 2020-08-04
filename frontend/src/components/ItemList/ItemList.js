@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { Link, useHistory } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -8,8 +8,9 @@ const ItemList = (props) => {
   const addNewItemRef = React.useRef();
   const shareCategoryRef = React.useRef();
   const createNewItemAction = useStoreActions(actions => actions.db.createNewItemAction);
-  // const categoryId = useStoreState(state => state.app.category); // TODO: state resets on refresh, hence issue
-  const { categoryId } = props.match.params; 
+  const userId = useStoreState(state => state.auth.user.uid);
+  const { categoryId } = props.match.params;
+  const collabList = useStoreState(state => state.db.share);
   const itemList = useStoreState(state => state.db.items);
   const getItemsInCategoryAction = useStoreActions(actions => actions.db.getItemsInCategoryAction);
   const deleteItemAction = useStoreActions(actions => actions.db.deleteItemAction);
@@ -17,12 +18,19 @@ const ItemList = (props) => {
   const deleteCategoryAction = useStoreActions(actions => actions.db.deleteCategoryAction);
   const shareCategoryAction = useStoreActions(actions => actions.db.shareCategoryAction);
   const removeShareCategoryAction = useStoreActions(actions => actions.db.removeShareCategoryAction);
+  const getAllCategoryShareAction = useStoreActions(actions => actions.db.getAllCategoryShareAction);
   const history = useHistory();
 
   useEffect(() => {
     (async () => {
       addNewItemRef.current.focus();
       await getItemsInCategoryAction({ categoryId });
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await getAllCategoryShareAction({ categoryId, userId });
     })();
   }, []);
 
@@ -58,6 +66,11 @@ const ItemList = (props) => {
     await shareCategoryAction({ categoryId, emailId });
     shareCategoryRef.current.value = "";
   }
+
+  const onRemoveCategoryShare = async (collab) => {
+    const { userId } = collab;
+    await removeShareCategoryAction({ categoryId, userId });
+  };
 
   const onDeleteCategory = async () => {
     const isConfirm = window.confirm("Sure you wanna delete this category? This cannot be undone!");
@@ -97,7 +110,7 @@ const ItemList = (props) => {
 
   return (
     <div>
-      <h2>Items In This Category</h2>
+      <h2>Items</h2>
 
       <List itemList={itemList} />
 
@@ -112,6 +125,18 @@ const ItemList = (props) => {
       <form onSubmit={onShareCategory}>
         <input type="text" ref={shareCategoryRef} placeholder="Add Email Id To Share With" />
       </form>
+
+      {collabList && (collabList.length > 0) && <div>
+        <h3>Collab</h3>
+        { collabList.map((collab, idx) => {
+          return (
+            <div key={idx}>
+              <span>{collab.emailId}</span>
+              <input type="text" defaultValue="D" onClick={() => onRemoveCategoryShare(collab)} />
+            </div>
+          );
+        }) }
+      </div>}
 
       <div>
         <Link to={`/`}><span>Home</span></Link>

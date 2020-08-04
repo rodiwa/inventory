@@ -219,7 +219,7 @@ export const removeShareCategoryApi = ({ categoryId, userId }) => {
 export const getAllCategoryShareApi = ({ categoryId }) => {
   return (async () => {
     try {
-      const response = await fetch(getAllCategoryShareApiUrl);
+      const response = await fetch(`${getAllCategoryShareApiUrl}/${categoryId}`);
       if (response.status !== 200) {
         setError(response.status);
       }
