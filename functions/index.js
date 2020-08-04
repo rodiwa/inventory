@@ -109,13 +109,18 @@ app.get('/api/items/:categoryId', (req, res) => {
 app.post('/api/category/create', (req, res) => {
   (async () => {
     try {
-      const { categoryName, categoryId, userId } = req.body;
+      const { categoryName, categoryId, userId, emailId } = req.body;
       await db.collection('category').doc(categoryId).create({
         id: categoryId,
         name: categoryName,
         users: [userId]
       })
-      return res.status(200).send('ok');
+
+      await db.collection('category').doc(categoryId).collection('share').doc(userId).create({
+        userId,
+        emailId
+      });
+      return res.status(200).end();
     } catch(error) {
       console.error(error);
       return res.status(500).send(error);
@@ -158,8 +163,6 @@ app.post('/api/category/create', (req, res) => {
 // })
 
 // get all category
-// TODO: 1st attempt; get category+ items in one shot
-// TODO: else, get category, items separately but recursively
 app.get('/api/category/all/:userId', (req, res) => {
   (async () => {
     try {
@@ -180,39 +183,48 @@ app.get('/api/category/all/:userId', (req, res) => {
 // get all items, soreted by category
 // TODO: 2 ways to do this; get all categories, all items (separately and) parallely and mcombine them on client side
 // TODO: or, simply get category, then its items recursively; could be more expensive
-app.get('/api/category/all/sorted', (req, res) => {
-  (async () => {
-    try {
-      let result = [];
-      const categoryGroup = await db.collection('category').get();
-      categoryGroup.forEach(async (category) => {
-        let categoryData = category.data();
-        categoryData.items = [];
-        const itemsRef = await db.collection('category').doc(categoryData.id).collection('items').get();
-        // TODO: fix this, adding this, return empty array, else works good
-        // itemsRef.forEach(async item => {
-        //   categoryData.items.push(await item.data());
-        // });
-        result.push(categoryData);
-      });
-      return res.status(200).send(result);
-    } catch(error) {
-      console.error(error);
-      return res.status(500).send(error);
-    }
-  })();
-});
+// app.get('/api/category/all/sorted', (req, res) => {
+//   (async () => {
+//     try {
+//       let result = [];
+//       const categoryGroup = await db.collection('category').get();
+//       categoryGroup.forEach(async (category) => {
+//         let categoryData = category.data();
+//         categoryData.items = [];
+//         const itemsRef = await db.collection('category').doc(categoryData.id).collection('items').get();
+//         // TODO: fix this, adding this, return empty array, else works good
+//         // itemsRef.forEach(async item => {
+//         //   categoryData.items.push(await item.data());
+//         // });
+//         result.push(categoryData);
+//       });
+//       return res.status(200).send(result);
+//     } catch(error) {
+//       console.error(error);
+//       return res.status(500).send(error);
+//     }
+//   })();
+// });
 
 // deletes given category (and its items) 
 app.delete('/api/category/delete', (req, res) => {
   (async () => {
     try {
       const { categoryId } = req.body;
+      // delete all items
       const allItemsInCategory = await db.collection('category').doc(categoryId).collection('items').get();
       allItemsInCategory.forEach(async (snapshot) => {
         const { id } = snapshot.data();
         await db.collection('category').doc(categoryId).collection('items').doc(id).delete();
       });
+      // delete all share link
+      const allSharesInCategory = await db.collection('category').doc(categoryId).collection('share').get();
+      allSharesInCategory.forEach(async (snapshot) => {
+        const { id } = snapshot.data();
+        await db.collection('category').doc(categoryId).collection('share').doc(id).delete();
+      });
+
+      // finally, delete category itself
       await db.collection('category').doc(categoryId).delete();
       return res.status(200).send(categoryId);
     } catch(error) {
@@ -222,8 +234,11 @@ app.delete('/api/category/delete', (req, res) => {
   })();
 })
 
+/**
+ * SHARE FEATURE APIS
+ */
 // share category with other email ids
-app.post('/api/category/share', (req, res) => {
+app.post('/api/category/share/add', (req, res) => {
   (async () => {
     try {
       const { categoryId, emailId } = req.body;
@@ -245,6 +260,13 @@ app.post('/api/category/share', (req, res) => {
       await db.collection('category').doc(categoryId).update({
         users: admin.firestore.FieldValue.arrayUnion(userId)
       });
+
+      //add that new user to share collection
+      await db.collection('category').doc(categoryId).collection('share').doc(userId).create({
+        userId,
+        emailId
+      });
+
       return res.status(200).end();
     } catch (error) {
       console.error(error);
@@ -261,8 +283,30 @@ app.post('/api/category/share/remove', (req, res) => {
       await db.collection('category').doc(categoryId).update({
         users: admin.firestore.FieldValue.arrayRemove(userId)
       });
+      // also remove from share collection
+      await db.collection('category').doc(categoryId).update({
+        users: admin.firestore.FieldValue.arrayRemove(userId)
+      });
+      await db.collection('category').doc(categoryId).collection('share').doc(userId).delete();
       return res.status(200).end();
     } catch (error) {
+      console.error(error);
+      return res.status(500).send(error);
+    }
+  })();
+});
+
+app.get('/api/category/share/list/:categoryId', (req, res) => {
+  (async () => {
+    try {
+      const { categoryId } = req.params;
+      let result = []
+      const allShareRef = await db.collection('category').doc(categoryId).collection('share').get();
+      allShareRef.forEach(share => {
+        result.push(share.data());
+      });
+      return res.status(200).send(result);
+    } catch(error) {
       console.error(error);
       return res.status(500).send(error);
     }

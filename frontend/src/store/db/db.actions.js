@@ -20,8 +20,8 @@ const dbActions = {
   createNewCategoryAction: thunk((action, payload) => {
     return (async () => {
       try {
-        const { categoryName, categoryId, userId } = payload;
-        const response = await DB.createNewCategory({ categoryName, categoryId, userId });
+        const { categoryName, categoryId, userId, emailId } = payload;
+        const response = await DB.createNewCategory({ categoryName, categoryId, userId, emailId });
       } catch(error) {
         console.error(error);
       }
@@ -122,6 +122,17 @@ const dbActions = {
       try {
         const { categoryId, userId } = payload;
         await DB.shareCategory({ categoryId, userId });
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
+
+  getAllCategoryShareAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId } = payload;
+        await DB.getAllCategoryShare({ categoryId });
       } catch(error) {
         console.error(error);
       }

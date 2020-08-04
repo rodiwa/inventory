@@ -9,7 +9,7 @@ const {
   createNewItemApiUrl, deleteItemApiUrl, updateCountApiUrl,
   createNewCategoryApiUrl, getAllCategoryAndItemsApiUrl, getItemsInCategoryApiUrl,
   createNewUserApiUrl, isExistingUserApiUrl, deleteUserApiUrl, deleteCategoryApiUrl,
-  shareCategoryApiUrl, removeShareCategoryApiUrl
+  shareCategoryApiUrl, removeShareCategoryApiUrl, getAllCategoryShareApiUrl
 } = apiUrl;
 
 const setError = (errorCode) => {
@@ -122,7 +122,7 @@ export const updateCountApi = ({ categoryId, itemId, count }) => {
  * CATEGORY APIS
  */
 // new one
-export const createNewCategoryApi = ({ categoryName, categoryId, userId }) => {
+export const createNewCategoryApi = ({ categoryName, categoryId, userId, emailId }) => {
   return (async () => {
     try {
       const response = await fetch(createNewCategoryApiUrl, {
@@ -130,7 +130,7 @@ export const createNewCategoryApi = ({ categoryName, categoryId, userId }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ categoryName, categoryId, userId })
+        body: JSON.stringify({ categoryName, categoryId, userId, emailId })
       })
       if (response.status !== 200) {
         setError(response.status);
@@ -215,6 +215,20 @@ export const removeShareCategoryApi = ({ categoryId, userId }) => {
     }
   })();
 }
+
+export const getAllCategoryShareApi = ({ categoryId }) => {
+  return (async () => {
+    try {
+      const response = await fetch(getAllCategoryShareApiUrl);
+      if (response.status !== 200) {
+        setError(response.status);
+      }
+      return response.json();
+    } catch(error) {
+      console.error(error);
+    }
+  })();
+};
 
 /**
  * USER APIS

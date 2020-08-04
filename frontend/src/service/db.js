@@ -25,8 +25,8 @@ export const updateCount = async ({ categoryId, itemId, count }) => {
  * CATEGORY APIS
  */
 // new one
-export const createNewCategory = async ({ categoryName, categoryId, userId }) => {
-  await api.createNewCategoryApi({ categoryName, categoryId, userId });
+export const createNewCategory = async ({ categoryName, categoryId, userId, emailId }) => {
+  await api.createNewCategoryApi({ categoryName, categoryId, userId, emailId });
 }
 
 export const getAllCategoryAndItems = async ({ userId }) => {
@@ -46,6 +46,13 @@ export const shareCategory = async ({ categoryId, emailId }) => {
 export const removeShareCategory = async ({ categoryId, userId }) => {
   await api.removeShareCategoryApi({ categoryId, userId });
 }
+
+export const getAllCategoryShare = async ({ categoryId }) => {
+  const response = await api.getAllCategoryShareApi({ categoryId });
+  return response;
+}
+
+
 
 /**
  * USER APIS
