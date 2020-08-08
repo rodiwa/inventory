@@ -1,8 +1,8 @@
 import { action, thunk } from "easy-peasy";
-import * as DB from '../../service/db';
+import * as DB from "../../service/db";
 
 // TODO: special case for getting firestore reference directly into actions
-import Auth from '../../service/auth';
+import Auth from "../../service/auth";
 
 const dbActions = {
   getAllCategoryAction: thunk((action, payload) => {
@@ -11,7 +11,7 @@ const dbActions = {
         const { userId } = payload;
         const response = await DB.getAllCategoryAndItems({ userId });
         action.setAllCategories(response);
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -21,8 +21,13 @@ const dbActions = {
     return (async () => {
       try {
         const { categoryName, categoryId, userId, emailId } = payload;
-        const response = await DB.createNewCategory({ categoryName, categoryId, userId, emailId });
-      } catch(error) {
+        const response = await DB.createNewCategory({
+          categoryName,
+          categoryId,
+          userId,
+          emailId
+        });
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -33,7 +38,7 @@ const dbActions = {
       try {
         const { categoryId } = payload;
         await DB.deleteCategory({ categoryId });
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -43,8 +48,12 @@ const dbActions = {
     return (async () => {
       try {
         const { categoryId, itemId, itemName } = payload;
-        const response = await DB.createNewItem({ categoryId, itemId, itemName });
-      } catch(error) {
+        const response = await DB.createNewItem({
+          categoryId,
+          itemId,
+          itemName
+        });
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -70,15 +79,18 @@ const dbActions = {
         const { categoryId } = payload;
         let result = [];
         const db = Auth.getCloudStoreReference();
-        const itemInCategoryQuery = db.collection('category').doc(categoryId).collection('items');
+        const itemInCategoryQuery = db
+          .collection("category")
+          .doc(categoryId)
+          .collection("items");
         itemInCategoryQuery.onSnapshot(snapshot => {
           result = [];
           snapshot.forEach(item => {
             result.push(item.data());
-          })
-          actions.setItemsInCategoryAction(result)
+          });
+          actions.setItemsInCategoryAction(result);
         });
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -89,7 +101,7 @@ const dbActions = {
       try {
         const { categoryId, itemId } = payload;
         await DB.deleteItem({ categoryId, itemId });
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -100,7 +112,7 @@ const dbActions = {
       try {
         const { categoryId, itemId, count } = payload;
         await DB.updateCount({ categoryId, itemId, count });
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -111,7 +123,7 @@ const dbActions = {
       try {
         const { categoryId, emailId } = payload;
         await DB.shareCategory({ categoryId, emailId });
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -122,7 +134,7 @@ const dbActions = {
       try {
         const { categoryId, userId } = payload;
         await DB.removeShareCategory({ categoryId, userId });
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
@@ -133,29 +145,28 @@ const dbActions = {
       try {
         const { categoryId, userId } = payload;
         let response = await DB.getAllCategoryShare({ categoryId });
-        response = response.filter(share => share.userId !== userId)
+        response = response.filter(share => share.userId !== userId);
         actions.setAllCategoryShareAction(response);
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     })();
   }),
-  
+
   /**
    * ACTIONS
    */
   setAllCategories: action((state, payload) => {
     state.category = payload;
   }),
-  
+
   setItemsInCategoryAction: action((state, payload) => {
     state.items = payload;
   }),
 
   setAllCategoryShareAction: action((state, payload) => {
     state.share = payload;
-  }),
-  
-}
+  })
+};
 
 export default dbActions;

@@ -1,5 +1,9 @@
 const appModel = {
-  category: {}
-}
+  category: {},
+  link: {
+    title: "Category",
+    linkTo: "/"
+  }
+};
 
 export default appModel;
