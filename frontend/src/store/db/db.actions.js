@@ -4,8 +4,6 @@ import * as DB from '../../service/db';
 // TODO: special case for getting firestore reference directly into actions
 import Auth from '../../service/auth';
 
-
-
 const dbActions = {
   getAllCategoryAction: thunk((action, payload) => {
     return (async () => {
@@ -22,8 +20,8 @@ const dbActions = {
   createNewCategoryAction: thunk((action, payload) => {
     return (async () => {
       try {
-        const { categoryName, categoryId, userId } = payload;
-        const response = await DB.createNewCategory({ categoryName, categoryId, userId });
+        const { categoryName, categoryId, userId, emailId } = payload;
+        const response = await DB.createNewCategory({ categoryName, categoryId, userId, emailId });
       } catch(error) {
         console.error(error);
       }
@@ -108,7 +106,40 @@ const dbActions = {
     })();
   }),
 
+  shareCategoryAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId, emailId } = payload;
+        await DB.shareCategory({ categoryId, emailId });
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
 
+  removeShareCategoryAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId, userId } = payload;
+        await DB.removeShareCategory({ categoryId, userId });
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
+
+  getAllCategoryShareAction: thunk((actions, payload) => {
+    return (async () => {
+      try {
+        const { categoryId, userId } = payload;
+        let response = await DB.getAllCategoryShare({ categoryId });
+        response = response.filter(share => share.userId !== userId)
+        actions.setAllCategoryShareAction(response);
+      } catch(error) {
+        console.error(error);
+      }
+    })();
+  }),
   
   /**
    * ACTIONS
@@ -119,6 +150,10 @@ const dbActions = {
   
   setItemsInCategoryAction: action((state, payload) => {
     state.items = payload;
+  }),
+
+  setAllCategoryShareAction: action((state, payload) => {
+    state.share = payload;
   }),
   
 }

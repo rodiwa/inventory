@@ -8,6 +8,7 @@ const CategoryList = () => {
   const addNewCategoryRef = React.useRef();
   const categoryList = useStoreState(state => state.db.category);
   const userId = useStoreState(state => state.auth.user.uid);
+  const emailId = useStoreState(state => state.auth.user.email);
   const getAllCategoryAction = useStoreActions(actions => actions.db.getAllCategoryAction);
   const createNewCategoryAction = useStoreActions(actions => actions.db.createNewCategoryAction);
   const setCurrentCategoryAction = useStoreActions(actions => actions.app.setCurrentCategoryAction);
@@ -33,7 +34,7 @@ const CategoryList = () => {
       return;
     };
     const categoryId = uuid();
-    await createNewCategoryAction({ categoryName, categoryId, userId });
+    await createNewCategoryAction({ categoryName, categoryId, userId, emailId });
     addNewCategoryRef.current.value = "";
     setCurrentCategoryAction(categoryId);
     history.push(`/items/${categoryId}`);
@@ -69,7 +70,7 @@ const CategoryList = () => {
 
   return (
     <div>
-      <h2>CategoryList</h2>
+      <h2>Category</h2>
       <List categoryItems={categoryList} />
       <form onSubmit={onAddNewCategory}>
         <input type="text" ref={addNewCategoryRef} placeholder="Add New Category" />

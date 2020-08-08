@@ -42,7 +42,7 @@ const authActions = {
           const isUserExisting = await DB.isUserExisting({ id: uid });
 
           if (isUserExisting === 'false') {
-            await DB.createNewUser({ id: uid });
+            await DB.createNewUser({ id: uid, email });
           }
 
           actions.setLoginUserDetails(userDetails);
