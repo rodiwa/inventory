@@ -1,5 +1,5 @@
 const userModel = {
-  userId: "KDn023R9meXOmgW2xkamntudAOq2" // TODO: hardcoded for now
-}
+  userId: null
+};
 
 export default userModel;

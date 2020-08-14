@@ -140,13 +140,44 @@ const dbActions = {
     })();
   }),
 
+  // get share items once
+  // getAllCategoryShareAction: thunk((actions, payload) => {
+  //   return (async () => {
+  //     try {
+  //       const { categoryId, userId } = payload;
+  //       let response = await DB.getAllCategoryShare({ categoryId });
+  //       response = response.filter(share => share.userId !== userId);
+  //       actions.setAllCategoryShareAction(response);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   })();
+  // }),
+
+  // get share items with relatime sync
   getAllCategoryShareAction: thunk((actions, payload) => {
     return (async () => {
       try {
         const { categoryId, userId } = payload;
-        let response = await DB.getAllCategoryShare({ categoryId });
-        response = response.filter(share => share.userId !== userId);
-        actions.setAllCategoryShareAction(response);
+        let result = [];
+        const db = Auth.getCloudStoreReference();
+        const allSharesInCategory = db
+          .collection("category")
+          .doc(categoryId)
+          .collection("share");
+
+        allSharesInCategory.onSnapshot(snapshot => {
+          result = [];
+          snapshot.forEach(item => {
+            const share = item.data();
+            console.log(share);
+            console.log(userId);
+            if (share.userId !== userId) {
+              result.push(item.data());
+            }
+          });
+          actions.setAllCategoryShareAction(result);
+        });
       } catch (error) {
         console.error(error);
       }

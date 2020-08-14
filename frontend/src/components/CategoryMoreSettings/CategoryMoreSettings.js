@@ -12,7 +12,8 @@ import TextField from "@material-ui/core/TextField";
 
 const ItemsMoreSettings = props => {
   const { categoryId } = props.match.params;
-  const { userId } = useStoreState(state => state.user);
+  const userId = useStoreState(state => state.auth.user.uid);
+  const loggedInEmailId = useStoreState(state => state.auth.user.email);
   const shareCategoryRef = React.useRef();
   const share = useStoreState(state => state.db.share);
   const getAllCategoryShareAction = useStoreActions(
@@ -48,6 +49,9 @@ const ItemsMoreSettings = props => {
     if (!EmailValidator.validate(emailId)) {
       // TODO: add alert toaster here
       return console.error("Enter valid email only");
+    }
+    if (emailId === loggedInEmailId) {
+      return console.error("Cannot add your own email id");
     }
     await shareCategoryAction({ categoryId, emailId });
     shareCategoryRef.current.value = "";
