@@ -8,6 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/DeleteOutline";
@@ -31,6 +32,14 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     padding: "0 2em",
     alignItems: "center"
+  },
+  addItemInputText: {
+    position: "absolute",
+    zIndex: 1,
+    bottom: 30,
+    left: 0,
+    right: 0,
+    margin: "0 auto"
   }
 }));
 
@@ -151,12 +160,12 @@ const ItemList = props => {
       )}
 
       {isAdding && (
-        <form onSubmit={onAddNewItem}>
-          <input
-            type="text"
-            ref={addNewItemRef}
+        <form onSubmit={onAddNewItem} className={classes.addItemInputText}>
+          <TextField
+            inputRef={addNewItemRef}
             autoFocus
-            placeholder="Add New Item"
+            label="Add Item"
+            onChange={e => console.log(e)}
           />
         </form>
       )}

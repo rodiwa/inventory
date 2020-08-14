@@ -136,7 +136,7 @@ const CategoryList = () => {
           <TextField
             inputRef={addNewCategoryRef}
             autoFocus
-            label="Add New Category"
+            label="Add Category"
             onChange={e => console.log(e)}
           />
         </form>
