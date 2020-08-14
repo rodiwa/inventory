@@ -6,9 +6,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Button from "@material-ui/core/Button";
 import StarIcon from "@material-ui/icons/Star";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { v4 as uuid } from "uuid";
@@ -35,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 const CategoryList = () => {
   const history = useHistory();
   const addNewCategoryRef = React.useRef();
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const categoryList = useStoreState(state => state.db.category);
   const userId = useStoreState(state => state.auth.user.uid);
   const emailId = useStoreState(state => state.auth.user.email);
@@ -51,11 +50,15 @@ const CategoryList = () => {
   const setItemsInCategoryAction = useStoreActions(
     actions => actions.db.setItemsInCategoryAction
   );
+  const setShareInCategoryAction = useStoreActions(
+    actions => actions.db.setShareInCategoryAction
+  );
   const classes = useStyles();
 
   useEffect(() => {
     setCurrentCategoryAction(null);
     setItemsInCategoryAction([]);
+    setShareInCategoryAction([]);
   }, []);
 
   useEffect(() => {
@@ -89,8 +92,8 @@ const CategoryList = () => {
     history.push(`/items/${categoryId}`);
   };
 
-  const onToggleAddCategory = () => {
-    setIsAddingCategory(!isAddingCategory);
+  const onToggleAdd = () => {
+    setIsAdding(!isAdding);
   };
 
   // CHILD COMPONENTS
@@ -114,7 +117,6 @@ const CategoryList = () => {
                     onClick={() => onItemClick(category.id)}
                   />
                 </ListItem>
-                {/* <Divider /> */}
               </React.Fragment>
             );
           })}
@@ -126,28 +128,22 @@ const CategoryList = () => {
   return (
     <React.Fragment>
       <ListCategoryItems categoryItems={categoryList} />
-      {isAddingCategory && (
+      {isAdding && (
         <form
           onSubmit={onAddNewCategory}
           className={classes.addCategoryInputText}
         >
           <TextField
             inputRef={addNewCategoryRef}
+            autoFocus
             label="Add New Category"
             onChange={e => console.log(e)}
           />
-          {/* <Button
-            variant="contained"
-            color="primary"
-            onClick={onToggleAddCategory}
-          >
-            Cancel
-          </Button> */}
         </form>
       )}
-      {!isAddingCategory && (
+      {!isAdding && (
         <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-          <AddIcon onClick={onToggleAddCategory} />
+          <AddIcon onClick={onToggleAdd} />
         </Fab>
       )}
     </React.Fragment>

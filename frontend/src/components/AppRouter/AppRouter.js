@@ -13,6 +13,8 @@ import AboutApp from "../AboutApp/AboutApp";
 import Header from "../Header/Header";
 import Guest from "../Guest/Guest";
 import Settings from "../Settings/Settings";
+import ItemsMoreSettings from "../ItemsMoreSettings/ItemsMoreSettings";
+import CategoryMoreSettings from "../CategoryMoreSettings/CategoryMoreSettings";
 
 const AppRouter = () => {
   return (
@@ -21,6 +23,16 @@ const AppRouter = () => {
       <Switch>
         <Route exact path="/" component={CategoryList}></Route>
         <Route exact path="/items/:categoryId" component={ItemList}></Route>
+        <Route
+          exact
+          path="/items/meta/:itemId"
+          component={ItemsMoreSettings}
+        ></Route>
+        <Route
+          exact
+          path="/category/meta/:categoryId"
+          component={CategoryMoreSettings}
+        ></Route>
         <Route exact path="/about" component={AboutApp}></Route>
         <Route exact path="/logout" component={Guest}></Route>
         <Route exact path="/settings" component={Settings}></Route>

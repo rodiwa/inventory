@@ -23,12 +23,14 @@ const Header = () => {
     <React.Fragment>
       <AppBar position="static" color="secondary">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="open drawer">
-            <HomeIcon />
+          <IconButton edge="start" color="white">
+            <Link to="/">
+              <HomeIcon color="white" />
+            </Link>
           </IconButton>
           <Typography>{pageInfo.title}</Typography>
           <div className={classes.grow} />
-          <IconButton edge="end" color="inherit" aria-label="open drawer">
+          <IconButton edge="end" color="primary">
             <Link to="/settings">
               <SettingsIcon />
             </Link>

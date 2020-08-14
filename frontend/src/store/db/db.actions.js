@@ -164,6 +164,10 @@ const dbActions = {
     state.items = payload;
   }),
 
+  setShareInCategoryAction: action((state, payload) => {
+    state.share = payload;
+  }),
+
   setAllCategoryShareAction: action((state, payload) => {
     state.share = payload;
   })
