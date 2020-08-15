@@ -73,7 +73,7 @@ const ItemsMoreSettings = props => {
         <List component="nav">
           {share.map((shareItem, idx) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={idx}>
                 <ListItem button>
                   <ListItemText primary={shareItem.emailId} />
                   <ListItemSecondaryAction>

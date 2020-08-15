@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { v4 as uuid } from "uuid";
 import SkeletonList from "../SkeletonList/SkeletonList";
+import EmptyListLoaded from "../EmptyListLoaded/EmptyListLoaded";
 
 const useStyles = makeStyles(theme => ({
   fabButton: {
@@ -58,7 +59,7 @@ const CategoryList = () => {
 
   useEffect(() => {
     setCurrentCategoryAction(null);
-    setItemsInCategoryAction([]);
+    setItemsInCategoryAction(null);
     setShareInCategoryAction([]);
   }, []);
 
@@ -101,9 +102,13 @@ const CategoryList = () => {
   const ListCategoryItems = props => {
     const { categoryItems } = props;
 
-    if (!categoryItems.length) {
+    if (categoryItems === null) {
       return <SkeletonList />;
-    } else {
+    }
+    if (categoryItems && categoryItems.length === 0) {
+      return <EmptyListLoaded />;
+    }
+    if (categoryItems && categoryItems.length > 0) {
       return (
         <List component="nav" aria-label="main mailbox folders">
           {categoryItems.map((category, idx) => {

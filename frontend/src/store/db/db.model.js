@@ -1,6 +1,6 @@
 const dbModel = {
-  category: [],
-  items: []
-}
+  category: null,
+  items: null
+};
 
 export default dbModel;

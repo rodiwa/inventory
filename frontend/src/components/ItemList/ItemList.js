@@ -14,6 +14,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/DeleteOutline";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import SkeletonList from "../SkeletonList/SkeletonList";
+import EmptyListLoaded from "../EmptyListLoaded/EmptyListLoaded";
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
@@ -118,7 +119,8 @@ const ItemList = props => {
           {share && share.length > 0 && <SupervisorAccountIcon />}
         </div>
       </Paper>
-      {itemList && itemList.length === 0 && <SkeletonList />}
+      {itemList === null && <SkeletonList />}
+      {itemList && itemList.length === 0 && <EmptyListLoaded />}
       {itemList && itemList.length > 0 && (
         <List component="nav">
           {itemList.map((item, idx) => {

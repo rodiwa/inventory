@@ -18,7 +18,7 @@ const SkeletonList = () => {
     return (
       <div className={classes.skeletonList} key={idx}>
         <Skeleton height={45} width={45} variant="circle" />
-        <Skeleton height={30} width="80%" />
+        <Skeleton height={20} width="80%" />
       </div>
     );
   });

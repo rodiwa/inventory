@@ -170,8 +170,6 @@ const dbActions = {
           result = [];
           snapshot.forEach(item => {
             const share = item.data();
-            console.log(share);
-            console.log(userId);
             if (share.userId !== userId) {
               result.push(item.data());
             }
