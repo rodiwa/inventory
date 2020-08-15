@@ -13,6 +13,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import DeleteIcon from "@material-ui/icons/DeleteOutline";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import SkeletonList from "../SkeletonList/SkeletonList";
 import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
@@ -117,12 +118,12 @@ const ItemList = props => {
           {share && share.length > 0 && <SupervisorAccountIcon />}
         </div>
       </Paper>
-      {itemList && itemList.length === 0 && <p>Nothing to show here</p>}
+      {itemList && itemList.length === 0 && <SkeletonList />}
       {itemList && itemList.length > 0 && (
         <List component="nav">
           {itemList.map((item, idx) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={idx}>
                 <ListItem button onClick={e => onItemNameClick(e, item.id)}>
                   <ListItemIcon>
                     <Avatar>{item.count}</Avatar>

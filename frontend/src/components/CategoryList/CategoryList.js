@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { v4 as uuid } from "uuid";
+import SkeletonList from "../SkeletonList/SkeletonList";
 
 const useStyles = makeStyles(theme => ({
   fabButton: {
@@ -101,16 +102,16 @@ const CategoryList = () => {
     const { categoryItems } = props;
 
     if (!categoryItems.length) {
-      return <div>Nothing to show yet</div>;
+      return <SkeletonList />;
     } else {
       return (
         <List component="nav" aria-label="main mailbox folders">
           {categoryItems.map((category, idx) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={idx}>
                 <ListItem button>
                   <ListItemIcon>
-                    <StarIcon />
+                    <StarIcon fontSize="large" />
                   </ListItemIcon>
                   <ListItemText
                     primary={category.name}

@@ -23,9 +23,9 @@ const Header = () => {
     <React.Fragment>
       <AppBar position="static" color="secondary">
         <Toolbar>
-          <IconButton edge="start" color="white">
+          <IconButton edge="start" color="primary">
             <Link to="/">
-              <HomeIcon color="white" />
+              <HomeIcon color="primary" />
             </Link>
           </IconButton>
           <Typography>{pageInfo.title}</Typography>
