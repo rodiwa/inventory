@@ -3,6 +3,10 @@ import { useStoreActions } from "easy-peasy";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import GithubIcon from "@material-ui/icons/GitHub";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +14,7 @@ import IntroLogo from "../../assets/intro.svg";
 import WhenLogo from "../../assets/when.svg";
 import FaqLogo from "../../assets/faq.svg";
 import LoginLogo from "../../assets/login.svg";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
@@ -30,8 +35,11 @@ const useStyles = makeStyles({
     justifyContent: "flex-end"
   },
   footer: {
-    borderTop: "2px dashed cornflowerblue",
-    padding: 15
+    padding: "3em 2em 2em 2em",
+    backgroundColor: "rgba(0, 0, 128, 0.8)",
+    color: "rgba(0, 0, 0, 0.54)",
+    fontSize: "0.8em",
+    fontFamily: "roboto"
   }
 });
 
@@ -76,11 +84,8 @@ function GuestUser() {
             <img src={IntroLogo} className={classes.image} alt="intro image" />
           </div>
           <div>
-            <h3>What Is This?</h3>
-            <p>
-              Simple tool to help you remember things next time you need to dash
-              2 days before your loackdown
-            </p>
+            <h1>What Is This?</h1>
+            <p>An app that keeps track of common household items for you</p>
           </div>
         </div>
         <div className={classes.section}>
@@ -88,8 +93,11 @@ function GuestUser() {
             <img src={WhenLogo} className={classes.image} alt="intro image" />
           </div>
           <div>
-            <h3>When/ Where Can I Use It?</h3>
-            <p>Anywhere you make a list of things to buy</p>
+            <h1>When/ Where Can I Use It?</h1>
+            <p>
+              It started off as a way to have a list of things you need before
+              the next lockdown
+            </p>
           </div>
         </div>
         <div className={classes.section}>
@@ -97,7 +105,7 @@ function GuestUser() {
             <img src={FaqLogo} className={classes.image} alt="intro image" />
           </div>
           <div>
-            <h3>I have more questions</h3>
+            <h1>I have more questions</h1>
             <p>Read our FAQ</p>
           </div>
         </div>
@@ -106,7 +114,7 @@ function GuestUser() {
             <img src={LoginLogo} className={classes.image} alt="intro image" />
           </div>
           <div>
-            <h3>Login</h3>
+            <h1>Login</h1>
             <span>You. Are. Guest! Why. Are. You. Guest?</span>
           </div>
           <div>
@@ -114,7 +122,22 @@ function GuestUser() {
           </div>
         </div>
       </div>
-      <div className={classes.footer}>This is me</div>
+      <div className={classes.footer}>
+        <Box component="div" display="inline">
+          This project created by rodiwa
+        </Box>
+        <Box>
+          <IconButton>
+            <GithubIcon />
+          </IconButton>
+          <IconButton>
+            <TwitterIcon />
+          </IconButton>
+          <IconButton>
+            <FacebookIcon />
+          </IconButton>
+        </Box>
+      </div>
     </div>
   );
 }
