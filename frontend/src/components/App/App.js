@@ -3,6 +3,21 @@ import "./App.css";
 import AppRouter from "../AppRouter/AppRouter";
 import GuestUser from "../Guest/Guest";
 import { useStoreState, useStoreActions } from "easy-peasy";
+import {
+  createMuiTheme,
+  ThemeProvider,
+  makeStyles
+} from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+  typography: {
+    fontSize: 12,
+    htmlFontSize: 12,
+    body1: {
+      fontSize: "1em"
+    }
+  }
+});
 
 function App() {
   const isUserLoggedIn = useStoreState(state => state.auth.isLoggedIn);
@@ -18,9 +33,9 @@ function App() {
 
   return (
     <div className="App">
-      {/* TODO: use this to use with login */}
-      {isUserLoggedIn ? <AppRouter /> : <GuestUser />}
-      {/* <AppRouter /> */}
+      <ThemeProvider theme={theme}>
+        {isUserLoggedIn ? <AppRouter /> : <GuestUser />}
+      </ThemeProvider>
     </div>
   );
 }

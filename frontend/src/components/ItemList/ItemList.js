@@ -42,6 +42,9 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     right: 0,
     margin: "0 auto"
+  },
+  avatar: {
+    fontSize: "1em"
   }
 }));
 
@@ -115,7 +118,7 @@ const ItemList = props => {
     <div>
       <Paper elevation={1} onClick={onCategoryNameClick}>
         <div className={classes.heading}>
-          <h3>Category Name</h3>
+          <h4>Category Name</h4>
           {share && share.length > 0 && <SupervisorAccountIcon />}
         </div>
       </Paper>
@@ -128,7 +131,7 @@ const ItemList = props => {
               <React.Fragment key={idx}>
                 <ListItem button onClick={e => onItemNameClick(e, item.id)}>
                   <ListItemIcon>
-                    <Avatar>{item.count}</Avatar>
+                    <Avatar className={classes.avatar}>{item.count}</Avatar>
                   </ListItemIcon>
                   <ListItemText primary={item.name} />
                   <ListItemSecondaryAction>

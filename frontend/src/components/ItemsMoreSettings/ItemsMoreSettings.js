@@ -23,9 +23,9 @@ const ItemsMoreSettings = props => {
 
   return (
     <div>
-      <h2>Item Settings</h2>
+      <h3>Item Settings</h3>
 
-      <h3>Delete This Item</h3>
+      <h4>Delete This Item</h4>
       <p>THIS IS NOT WORKING RIGHT NOW</p>
       <IconButton edge="end" onClick={onDeleteItem}>
         <DeleteIcon fontSize="large" />

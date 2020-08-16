@@ -6,7 +6,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
 import StarIcon from "@material-ui/icons/Star";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -30,6 +32,9 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     right: 0,
     margin: "0 auto"
+  },
+  rightIcon: {
+    justifyContent: "flex-end"
   }
 }));
 
@@ -106,7 +111,7 @@ const CategoryList = () => {
       return <SkeletonList />;
     }
     if (categoryItems && categoryItems.length === 0) {
-      return <EmptyListLoaded />;
+      return <EmptyListLoaded type="category" />;
     }
     if (categoryItems && categoryItems.length > 0) {
       return (
@@ -116,13 +121,17 @@ const CategoryList = () => {
               <React.Fragment key={idx}>
                 <ListItem button>
                   <ListItemIcon>
-                    <StarIcon fontSize="large" />
+                    <StarIcon />
                   </ListItemIcon>
                   <ListItemText
                     primary={category.name}
                     onClick={() => onItemClick(category.id)}
                   />
+                  <ListItemIcon className={classes.rightIcon}>
+                    <ChevronRightIcon />
+                  </ListItemIcon>
                 </ListItem>
+                <Divider variant="middle" />
               </React.Fragment>
             );
           })}

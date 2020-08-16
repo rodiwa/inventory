@@ -95,10 +95,10 @@ const ItemsMoreSettings = props => {
 
   return (
     <div>
-      <h2>Category Settings</h2>
+      <h3>Category Settings</h3>
 
       <div>
-        <h3>Collaboration</h3>
+        <h4>Collaboration</h4>
         {share && share.length === 0 && <p>Nothing to show here</p>}
         {share && share.length > 0 && <ShareDetails />}
         <form onSubmit={onShareCategory}>
@@ -111,7 +111,7 @@ const ItemsMoreSettings = props => {
       </div>
 
       <div>
-        <h3>Delete This Category</h3>
+        <h4>Delete This Category</h4>
         <IconButton edge="end" aria-label="comments" onClick={onDeleteCategory}>
           <DeleteIcon fontSize="large" />
         </IconButton>
