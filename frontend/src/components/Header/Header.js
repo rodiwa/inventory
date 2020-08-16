@@ -14,12 +14,20 @@ import { useEffect } from "react";
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
+  },
+  appBar: {
+    backgroundColor: "rgba(0, 0, 128, 0.8)",
+    color: "white"
+  },
+  navIcon: {
+    color: "white"
   }
 }));
 
 const Title = () => {
   const [title, setTitle] = useState("");
   const location = useLocation();
+  const classes = useStyles();
 
   const getHeaderTitle = pathName => {
     if (pathName === "/") {
@@ -52,6 +60,7 @@ const HeaderNavLink = () => {
   const [navLink, setNavLink] = useState("/");
   const [navLinkIcon, setNavLinkIcon] = useState(null);
   const location = useLocation();
+  const classes = useStyles();
 
   const getHeaderNavLink = pathName => {
     if (pathName === "/") {
@@ -85,9 +94,9 @@ const HeaderNavLink = () => {
       return null;
     }
     if (pathName.match(/settings/g)) {
-      return <HomeIcon />;
+      return <HomeIcon className={classes.navIcon} />;
     }
-    return <ArrowBack />;
+    return <ArrowBack className={classes.navIcon} />;
   };
 
   useEffect(() => {
@@ -104,7 +113,12 @@ const Header = () => {
 
   return (
     <React.Fragment>
-      <AppBar position="static" color="secondary">
+      <AppBar
+        position="static"
+        color="transparent"
+        className={classes.appBar}
+        elevation={1}
+      >
         <Toolbar>
           <IconButton edge="start" color="primary">
             <HeaderNavLink />
@@ -113,7 +127,7 @@ const Header = () => {
           <div className={classes.grow} />
           <IconButton edge="end" color="primary">
             <Link to="/settings">
-              <SettingsIcon />
+              <SettingsIcon className={classes.navIcon} />
             </Link>
           </IconButton>
         </Toolbar>

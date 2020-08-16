@@ -15,8 +15,12 @@ import TextField from "@material-ui/core/TextField";
 import { v4 as uuid } from "uuid";
 import SkeletonList from "../SkeletonList/SkeletonList";
 import EmptyListLoaded from "../EmptyListLoaded/EmptyListLoaded";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    padding: "1.5em"
+  },
   fabButton: {
     position: "absolute",
     zIndex: 1,
@@ -111,7 +115,11 @@ const CategoryList = () => {
       return <SkeletonList />;
     }
     if (categoryItems && categoryItems.length === 0) {
-      return <EmptyListLoaded type="category" />;
+      return (
+        <Box className={classes.container}>
+          <EmptyListLoaded type="category" />
+        </Box>
+      );
     }
     if (categoryItems && categoryItems.length > 0) {
       return (
@@ -141,7 +149,7 @@ const CategoryList = () => {
   };
 
   return (
-    <React.Fragment>
+    <Box>
       <ListCategoryItems categoryItems={categoryList} />
       {isAdding && (
         <form
@@ -157,11 +165,11 @@ const CategoryList = () => {
         </form>
       )}
       {!isAdding && (
-        <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+        <Fab color="primary" aria-label="add" className={classes.fabButton}>
           <AddIcon onClick={onToggleAdd} />
         </Fab>
       )}
-    </React.Fragment>
+    </Box>
   );
 };
 

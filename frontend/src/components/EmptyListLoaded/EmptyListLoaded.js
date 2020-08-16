@@ -1,7 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import logo from "../../assets/add.svg";
+import addCategoryLogo from "../../assets/addCategory.svg";
+import addItemLogo from "../../assets/addItems.svg";
 
 const MESSAGES = {
   CATEGORY: "You can create a Category and add items in it!",
@@ -11,7 +12,7 @@ const MESSAGES = {
 const useStyles = makeStyles(theme => ({
   emptyList: {},
   image: {
-    width: "30%"
+    width: "60%"
   },
   text: {
     display: "flex",
@@ -28,8 +29,12 @@ const EmptyListLoaded = props => {
 
   return (
     <div className={classes.emptyList}>
-      <img src={logo} className={classes.image} />
+      <img
+        src={type === "items" ? addItemLogo : addCategoryLogo}
+        className={classes.image}
+      />
       <p className={classes.text}>{getMessage(type)}</p>
+      {type === "items" && <p>Click on Category Name to collab with others</p>}
       <p className={classes.text}>
         Click on the {<AddIcon />} icon to get started
       </p>

@@ -19,6 +19,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Avatar from "@material-ui/core/Avatar";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import Paper from "@material-ui/core/Paper";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { Box } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   fabButton: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   heading: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "0 2em",
+    padding: "0 1em",
     alignItems: "center"
   },
   addItemInputText: {
@@ -45,6 +47,10 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     fontSize: "1em"
+  },
+  rightIcon: {
+    justifyContent: "flex-end",
+    minWidth: "unset"
   }
 }));
 
@@ -116,14 +122,21 @@ const ItemList = props => {
 
   return (
     <div>
-      <Paper elevation={1} onClick={onCategoryNameClick}>
-        <div className={classes.heading}>
-          <h4>Category Name</h4>
-          {share && share.length > 0 && <SupervisorAccountIcon />}
-        </div>
-      </Paper>
+      <Box elevation={1} onClick={onCategoryNameClick}>
+        <Box className={classes.heading}>
+          <Box>
+            <h4>Category Name</h4>
+          </Box>
+          <Box>
+            {share && share.length > 0 && <SupervisorAccountIcon />}
+            <ListItemIcon className={classes.rightIcon}>
+              <ChevronRightIcon />
+            </ListItemIcon>
+          </Box>
+        </Box>
+      </Box>
       {itemList === null && <SkeletonList />}
-      {itemList && itemList.length === 0 && <EmptyListLoaded />}
+      {itemList && itemList.length === 0 && <EmptyListLoaded type="items" />}
       {itemList && itemList.length > 0 && (
         <List component="nav">
           {itemList.map((item, idx) => {
@@ -177,7 +190,7 @@ const ItemList = props => {
       )}
 
       {!isAdding && (
-        <Fab color="secondary" aria-label="add" className={classes.fabButton}>
+        <Fab color="primary" aria-label="add" className={classes.fabButton}>
           <AddIcon onClick={onToggleAdd} />
         </Fab>
       )}

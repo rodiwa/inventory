@@ -9,6 +9,27 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import collabIcon from "../../assets/collab2.svg";
+import deleteIcon from "../../assets/delete.svg";
+import Button from "@material-ui/core/Button";
+
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: "1.5em"
+  },
+  paper: {
+    padding: "0 1em 1em 1em",
+    marginBottom: "2em"
+  },
+  image: {
+    width: "60%"
+  },
+  inputForm: {
+    padding: "1em"
+  }
+}));
 
 const ItemsMoreSettings = props => {
   const { categoryId } = props.match.params;
@@ -29,6 +50,7 @@ const ItemsMoreSettings = props => {
     actions => actions.db.deleteCategoryAction
   );
   const history = useHistory();
+  const classes = useStyles();
 
   useEffect(() => {
     (async () => {
@@ -93,29 +115,50 @@ const ItemsMoreSettings = props => {
     );
   };
 
+  const NoCollabAdded = () => {
+    return (
+      <React.Fragment>
+        <img src={collabIcon} className={classes.image} />
+        <p>
+          Add you friends email so you can work together. Make sure they use
+          this email id for this app.
+        </p>
+      </React.Fragment>
+    );
+  };
+
   return (
-    <div>
+    <div className={classes.container}>
       <h3>Category Settings</h3>
 
-      <div>
+      <Paper variant="outlined" className={classes.paper}>
         <h4>Collaboration</h4>
-        {share && share.length === 0 && <p>Nothing to show here</p>}
+        {share && share.length === 0 && <NoCollabAdded />}
         {share && share.length > 0 && <ShareDetails />}
-        <form onSubmit={onShareCategory}>
+        <form onSubmit={onShareCategory} className={classes.inputForm}>
           <TextField
             inputRef={shareCategoryRef}
             label="Add Email Id To Share"
             onChange={e => console.log(e)}
           />
         </form>
-      </div>
+      </Paper>
 
-      <div>
+      <Paper variant="outlined" className={classes.paper}>
         <h4>Delete This Category</h4>
-        <IconButton edge="end" aria-label="comments" onClick={onDeleteCategory}>
-          <DeleteIcon fontSize="large" />
-        </IconButton>
-      </div>
+        <img src={deleteIcon} className={classes.image} />
+        <p>
+          You cannot undo this. This will remove for all other collaborators
+          too.
+        </p>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={onDeleteCategory}
+        >
+          Delete
+        </Button>
+      </Paper>
     </div>
   );
 };
