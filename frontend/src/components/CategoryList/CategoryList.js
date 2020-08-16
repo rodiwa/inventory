@@ -58,6 +58,9 @@ const CategoryList = () => {
   const setCurrentCategoryAction = useStoreActions(
     actions => actions.app.setCurrentCategoryAction
   );
+  const setCurrentCategoryNameAction = useStoreActions(
+    actions => actions.app.setCurrentCategoryNameAction
+  );
   const setItemsInCategoryAction = useStoreActions(
     actions => actions.db.setItemsInCategoryAction
   );
@@ -95,11 +98,13 @@ const CategoryList = () => {
     });
     addNewCategoryRef.current.value = "";
     setCurrentCategoryAction(categoryId);
+    setCurrentCategoryNameAction(categoryName);
     history.push(`/items/${categoryId}`);
   };
 
-  const onItemClick = categoryId => {
+  const onItemClick = (categoryId, categoryName) => {
     setCurrentCategoryAction(categoryId);
+    setCurrentCategoryNameAction(categoryName);
     history.push(`/items/${categoryId}`);
   };
 
@@ -133,7 +138,7 @@ const CategoryList = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary={category.name}
-                    onClick={() => onItemClick(category.id)}
+                    onClick={() => onItemClick(category.id, category.name)}
                   />
                   <ListItemIcon className={classes.rightIcon}>
                     <ChevronRightIcon />

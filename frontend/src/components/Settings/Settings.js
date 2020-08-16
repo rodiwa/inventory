@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     width: "60%"
+  },
+  headingTitle: {
+    marginTop: "unset"
   }
 }));
 
@@ -25,7 +28,7 @@ const Settings = () => {
 
   return (
     <div className={classes.container}>
-      <h2>Settings</h2>
+      <h2 className={classes.headingTitle}>Settings</h2>
 
       <Paper variant="outlined" className={classes.paper}>
         <h4>Logout</h4>

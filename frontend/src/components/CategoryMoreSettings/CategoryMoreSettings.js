@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
   },
   inputForm: {
     padding: "1em"
+  },
+  headingTitle: {
+    marginTop: "unset"
   }
 }));
 
@@ -129,7 +132,7 @@ const ItemsMoreSettings = props => {
 
   return (
     <div className={classes.container}>
-      <h3>Category Settings</h3>
+      <h3 className={classes.headingTitle}>Your Category Settings</h3>
 
       <Paper variant="outlined" className={classes.paper}>
         <h4>Collaboration</h4>

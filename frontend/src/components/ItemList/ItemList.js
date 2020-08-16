@@ -63,6 +63,7 @@ const ItemList = props => {
   const userId = useStoreState(state => state.auth.user.uid);
   const share = useStoreState(state => state.db.share);
   const { categoryId } = props.match.params;
+  const categoryName = useStoreState(state => state.app.categoryName);
   const itemList = useStoreState(state => state.db.items);
   const getItemsInCategoryAction = useStoreActions(
     actions => actions.db.getItemsInCategoryAction
@@ -125,7 +126,7 @@ const ItemList = props => {
       <Box elevation={1} onClick={onCategoryNameClick}>
         <Box className={classes.heading}>
           <Box>
-            <h4>Category Name</h4>
+            <h4>{categoryName || "Your Category"}</h4>
           </Box>
           <Box>
             {share && share.length > 0 && <SupervisorAccountIcon />}
