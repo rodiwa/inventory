@@ -4,7 +4,7 @@ A simple app that lets you manage lists and collobrate with others by adding oth
 
 https://inventory-4fc79.web.app/
 
----
+
 
 ## Usage
 - Login using a Google ID.
