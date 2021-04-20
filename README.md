@@ -1,7 +1,9 @@
 
 # Inventory App
 A simple app that lets you manage lists and collobrate with others by adding other person's email id. Think Google Keep.
+
 https://inventory-4fc79.web.app/
+
 ---
 
 ## Usage
