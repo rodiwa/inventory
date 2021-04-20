@@ -17,6 +17,7 @@ https://inventory-4fc79.web.app/
 
 ## Tech Stack
 - Google Cloudstore for realtime DB.
+- Firebase Hosting
 - CRNA (React)
 
 Note - This app is not currently maintained. 
